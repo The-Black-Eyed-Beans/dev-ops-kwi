@@ -1,0 +1,99 @@
+version: '3.3'
+services:
+  account:
+    environment:
+      APP_PORT: 8072
+    env_file:
+      - ./.env
+    build: ./aline-account-microservice
+    depends_on:
+      db:
+        condition: service_started
+    ports:
+      - "8072:8072"
+
+  bank:
+    environment:
+      APP_PORT: 8083
+    env_file:
+      - ./.env
+    build: ./aline-bank-microservice
+    depends_on:
+      db:
+        condition: service_started
+    ports:
+      - "8083:8083"
+
+  transaction:
+    environment:
+      APP_PORT: 8073
+    env_file:
+      - ./.env
+    build: ./aline-transaction-microservice
+    depends_on:
+      db:
+        condition: service_started
+    ports:
+      - "8073:8073"
+
+  underwriter:
+    environment:
+      APP_PORT: 8071
+    env_file:
+      - ./.env
+    build: ./aline-underwriter-microservice
+    depends_on:
+      db:
+        condition: service_started
+    ports:
+      - "8071:8071"
+
+  user:
+    environment:
+      APP_PORT: 8070
+    env_file:
+      - ./.env
+    build: ./aline-user-microservice
+    depends_on:
+      db:
+        condition: service_started
+    ports:
+      - "8070:8070"
+
+  db:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=${ROOT_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - "./sql:/docker-entrypoint-initdb.d"
+    ports:
+      - "3306:3306"
+
+  gateway:
+    environment:
+      APP_PORT: 8080
+      APP_SERVICE_HOST: host.docker.internal
+    env_file:
+      - ./.env
+    build: ./aline-gateway
+    ports:
+      - "8080:8080"
+
+  member:
+    build: ./member-dashboard
+    ports:
+      - "4200:80"
+
+  admin:
+    build: ./aline-admin-portal
+    ports:
+      - "3000:3000"
+
+  landing:
+    build: ./aline-landing-portal
+    ports:
+      - "3007:3007"
+  
