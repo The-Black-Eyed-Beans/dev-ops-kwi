@@ -9,6 +9,7 @@ services:
     depends_on:
       db:
         condition: service_started
+    restart: on-failure:3
     ports:
       - "8072:8072"
 
@@ -21,6 +22,7 @@ services:
     depends_on:
       db:
         condition: service_started
+    restart: on-failure:3
     ports:
       - "8083:8083"
 
@@ -33,6 +35,7 @@ services:
     depends_on:
       db:
         condition: service_started
+    restart: on-failure:3
     ports:
       - "8073:8073"
 
@@ -45,6 +48,7 @@ services:
     depends_on:
       db:
         condition: service_started
+    restart: on-failure:3
     ports:
       - "8071:8071"
 
@@ -57,6 +61,7 @@ services:
     depends_on:
       db:
         condition: service_started
+    restart: on-failure:3
     ports:
       - "8070:8070"
 
