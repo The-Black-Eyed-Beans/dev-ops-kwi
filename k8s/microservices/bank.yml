@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bank-deployment
+  labels:
+    app: bank
+    role: microservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bank
+  template:
+    metadata:
+      labels:
+        app: bank
+    spec:
+      containers:
+      - name: bank
+        image: keshaunw/bank-microservice
+        ports:
+        - containerPort: 8083
+        env:
+          - name: APP_PORT
+            value: "8083"
+        envFrom:
+          - configMapRef:
+              name: env
+          - secretRef:
+              name: secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bank-service
+spec:
+  selector:
+    app: bank
+  type: NodePort
+  ports:
+  - protocol: TCP
+    port: 8083
+    targetPort: 8083
+    nodePort: 30004

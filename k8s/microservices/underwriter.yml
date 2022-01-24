@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: underwriter-deployment
+  labels:
+    app: underwriter
+    role: microservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: underwriter
+  template:
+    metadata:
+      labels:
+        app: underwriter
+    spec:
+      containers:
+      - name: underwriter
+        image: keshaunw/underwriter-microservice
+        ports:
+        - containerPort: 8071
+        env:
+          - name: APP_PORT
+            value: "8071"
+        envFrom:
+          - configMapRef:
+              name: env
+          - secretRef:
+              name: secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: underwriter-service
+spec:
+  selector:
+    app: underwriter
+  type: NodePort
+  ports:
+  - protocol: TCP
+    port: 8071
+    targetPort: 8071
+    nodePort: 30002

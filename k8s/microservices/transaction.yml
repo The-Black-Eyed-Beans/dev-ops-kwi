@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transaction-deployment
+  labels:
+    app: transaction
+    role: microservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: transaction
+  template:
+    metadata:
+      labels:
+        app: transaction
+    spec:
+      containers:
+      - name: transaction
+        image: keshaunw/transaction-microservice
+        ports:
+        - containerPort: 8073
+        env:
+          - name: APP_PORT
+            value: "8073"
+        envFrom:
+          - configMapRef:
+              name: env
+          - secretRef:
+              name: secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: transaction-service
+spec:
+  selector:
+    app: transaction
+  type: NodePort
+  ports:
+  - protocol: TCP
+    port: 8073
+    targetPort: 8073
+    nodePort: 30003
