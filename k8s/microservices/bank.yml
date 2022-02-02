@@ -14,12 +14,14 @@ spec:
     metadata:
       labels:
         app: bank
+        role: microservice
     spec:
       containers:
       - name: bank
         image: keshaunw/bank-microservice
         ports:
-        - containerPort: 8083
+        - name: bank
+          containerPort: 8083
         env:
           - name: APP_PORT
             value: "8083"
@@ -28,17 +30,3 @@ spec:
               name: env
           - secretRef:
               name: secret
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: bank-service
-spec:
-  selector:
-    app: bank
-  type: NodePort
-  ports:
-  - protocol: TCP
-    port: 8083
-    targetPort: 8083
-    nodePort: 30004
