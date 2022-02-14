@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: user-deployment
+  namespace: aline
   labels:
     app: user
     role: microservice
@@ -25,6 +26,41 @@ spec:
         env:
           - name: APP_PORT
             value: "8070"
+          - name: DB_HOST
+            valueFrom:
+              configMapKeyRef:
+                key: DB_HOST
+                name: env
+          - name: DB_NAME
+            valueFrom:
+              configMapKeyRef:
+                key: DB_NAME
+                name: env
+          - name: DB_USERNAME
+            valueFrom:
+              configMapKeyRef:
+                key: DB_USERNAME
+                name: env
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: DB_PASSWORD
+                name: secret
+          - name: DB_PORT
+            valueFrom:
+              configMapKeyRef:
+                key: DB_PORT
+                name: env
+          - name: ENCRYPT_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                key: ENCRYPT_SECRET_KEY
+                name: secret
+          - name: JWT_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                key: JWT_SECRET_KEY
+                name: secret
         envFrom:
           - configMapRef:
               name: env

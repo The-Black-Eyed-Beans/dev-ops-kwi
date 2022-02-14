@@ -1,0 +1,25 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+metadata:
+  name: kwi-aline
+  region: us-east-1
+availabilityZones: ['us-east-1a', 'us-east-1b']
+
+# nodeGroups:
+#   - name: node
+#     instanceType: t2.micro
+#     desiredCapacity: 1
+#     privateNetworking: false
+#     ssh:
+#       publicKeyName: keshaun-ssh
+#       allow: true
+
+fargateProfiles:
+  - name: fp-aline
+    selectors:
+      - namespace: aline
+
+cloudWatch:
+  clusterLogging:
+    # enable specific types of cluster control plane logs
+    enableTypes: ["audit", "authenticator", "controllerManager"]
