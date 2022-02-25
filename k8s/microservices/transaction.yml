@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: transaction-deployment
-  namespace: aline
+  # namespace: aline
   labels:
     app: transaction
     role: microservice

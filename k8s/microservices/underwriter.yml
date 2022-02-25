@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: underwriter-deployment
-  namespace: aline
+  # namespace: aline
   labels:
     app: underwriter
     role: microservice

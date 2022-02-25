@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: backend-service
-  namespace: aline
+  # namespace: aline
 spec:
   type: ClusterIP
   selector:

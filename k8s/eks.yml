@@ -5,19 +5,19 @@ metadata:
   region: us-east-1
 availabilityZones: ['us-east-1a', 'us-east-1b']
 
-# nodeGroups:
-#   - name: node
-#     instanceType: t2.micro
-#     desiredCapacity: 1
-#     privateNetworking: false
-#     ssh:
-#       publicKeyName: keshaun-ssh
-#       allow: true
+nodeGroups:
+  - name: node
+    instanceType: t2.micro
+    desiredCapacity: 4
+    privateNetworking: false
+    ssh:
+      publicKeyName: keshaun-ssh
+      allow: true
 
-fargateProfiles:
-  - name: fp-aline
-    selectors:
-      - namespace: aline
+# fargateProfiles:
+#   - name: fp-aline
+#     selectors:
+#       - namespace: default
 
 cloudWatch:
   clusterLogging:
