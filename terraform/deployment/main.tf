@@ -6,3 +6,13 @@ module "vpc" {
     private = var.private
     alb = var.alb
 }
+
+module "ecs" {
+    source = "../modules/ecs"
+}
+
+module "eks" {
+    source = "../modules/eks"
+    private = module.vpc.private
+    security_groups = module.vpc.security_groups
+}

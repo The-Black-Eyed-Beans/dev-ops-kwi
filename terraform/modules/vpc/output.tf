@@ -22,3 +22,8 @@ output "security_groups" {
     description = "Security groups for the VPC."
     value = aws_security_group.sg
 }
+
+output "alb" {
+    description = "Application Load Balancer for the VPC."
+    value = aws_lb.alb
+}

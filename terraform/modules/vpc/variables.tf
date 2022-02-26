@@ -5,7 +5,7 @@ variable "vpc_cidr" {
 
 variable "vpc_sg" {
   type        = any
-  description = "Security group used within the VPC."
+  description = "Security groups used within the VPC."
 }
 
 variable "public" {
