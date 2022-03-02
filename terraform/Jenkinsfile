@@ -11,7 +11,7 @@ pipeline {
         stage("Init") {
             steps {
                 echo "Initializing Terraform.."
-                dir ("terraform/") {
+                dir ("terraform/deployment") {
                     sh """
                     terraform init \
                         -backend-config="bucket=${BUCKET_KWI}" \
@@ -25,8 +25,8 @@ pipeline {
         stage("Plan") {
             steps {
                 echo "Creating Terraform Plan"
-                dir ("terraform/") {
-                    sh "terraform plan -var-file=deployment/input.tfvars -out out/output.tf"
+                dir ("terraform/deployment") {
+                    sh "terraform plan -var-file=input.tfvars -out out/output.tf"
                 }
             }
         }
@@ -34,7 +34,7 @@ pipeline {
         stage("Apply") {
             steps {
                 echo "Applying Terraform Plan"
-                dir ("terraform/") {
+                dir ("terraform/deployment") {
                     sh "terraform apply -auto-approve -no-color out/output.tf"
                 }
             }
