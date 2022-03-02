@@ -9,7 +9,7 @@ pipeline {
 
     stages {
         stage("Init") {
-            step {
+            steps {
                 echo "Initializing Terraform.."
                 sh """
                 terraform init \
@@ -21,14 +21,14 @@ pipeline {
         }
 
         stage("Plan") {
-            step {
+            steps {
                 echo "Creating Terraform Plan"
                 sh "terraform plan -var-file=deployment/input.tfvars -out out/output.tf"
             }
         }
 
         stage("Apply") {
-            step {
+            steps {
                 echo "Applying Terraform Plan"
                 sh "terraform apply -auto-approve -no-color output.tf"
             }
