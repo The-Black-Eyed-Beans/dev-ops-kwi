@@ -5,7 +5,6 @@ pipeline {
         REGION_KWI = credentials("REGION-KWI")
         BUCKET_KWI = credentials("BUCKET-KWI")
         KEY_NAME = "aline-kwi-infra"
-        AWS_PROFILE = "keshaun"
     }
 
     stages {
@@ -27,7 +26,7 @@ pipeline {
             steps {
                 echo "Creating Terraform Plan"
                 dir ("terraform/deployment") {
-                    sh "terraform plan -var-file=input.tfvars -out out/output.tf"
+                    sh "terraform plan -var-file=input.tfvars -out out.tf"
                 }
             }
         }
@@ -36,7 +35,7 @@ pipeline {
             steps {
                 echo "Applying Terraform Plan"
                 dir ("terraform/deployment") {
-                    sh "terraform apply -auto-approve -no-color out/output.tf"
+                    sh "terraform apply -auto-approve -no-color out.tf"
                 }
             }
         }
