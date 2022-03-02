@@ -1,0 +1,37 @@
+pipeline {
+    agent any
+
+    environment {
+        REGION_KWI = credentials("REGION-KWI")
+        BUCKET_KWI = credentials("BUCKET-KWI")
+        KEY_NAME = "aline-kwi-infra"
+    }
+
+    stages {
+        stage("Init") {
+            step {
+                echo "Initializing Terraform.."
+                sh """
+                terraform init \
+                    -backend-config="bucket=${BUCKET_KWI}" \
+                    -backend-config="key=${KEY_NAME}" \
+                    -backend-config="region=${REGION_KWI}"
+                """
+            }
+        }
+
+        stage("Plan") {
+            step {
+                echo "Creating Terraform Plan"
+                sh "terraform plan -var-file=deployment/input.tfvars -out out/output.tf"
+            }
+        }
+
+        stage("Apply") {
+            step {
+                echo "Applying Terraform Plan"
+                sh "terraform apply -auto-approve -no-color output.tf"
+            }
+        }
+    }
+}
