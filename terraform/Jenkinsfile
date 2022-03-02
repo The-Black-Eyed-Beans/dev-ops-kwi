@@ -5,6 +5,7 @@ pipeline {
         REGION_KWI = credentials("REGION-KWI")
         BUCKET_KWI = credentials("BUCKET-KWI")
         KEY_NAME = "aline-kwi-infra"
+        AWS_PROFILE = "keshaun"
     }
 
     stages {
