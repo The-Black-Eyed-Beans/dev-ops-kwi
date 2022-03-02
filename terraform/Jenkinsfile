@@ -11,26 +11,32 @@ pipeline {
         stage("Init") {
             steps {
                 echo "Initializing Terraform.."
-                sh """
-                terraform init \
-                    -backend-config="bucket=${BUCKET_KWI}" \
-                    -backend-config="key=${KEY_NAME}" \
-                    -backend-config="region=${REGION_KWI}"
-                """
+                dir ("terraform/") {
+                    sh """
+                    terraform init \
+                        -backend-config="bucket=${BUCKET_KWI}" \
+                        -backend-config="key=${KEY_NAME}" \
+                        -backend-config="region=${REGION_KWI}"
+                    """
+                }
             }
         }
 
         stage("Plan") {
             steps {
                 echo "Creating Terraform Plan"
-                sh "terraform plan -var-file=terraform/deployment/input.tfvars -out terraform/out/output.tf"
+                dir ("terraform/") {
+                    sh "terraform plan -var-file=deployment/input.tfvars -out out/output.tf"
+                }
             }
         }
 
         stage("Apply") {
             steps {
                 echo "Applying Terraform Plan"
-                sh "terraform apply -auto-approve -no-color terraform/out/output.tf"
+                dir ("terraform/") {
+                    sh "terraform apply -auto-approve -no-color out/output.tf"
+                }
             }
         }
     }
