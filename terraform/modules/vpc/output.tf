@@ -18,6 +18,11 @@ output "gateway" {
     value = aws_internet_gateway.gateway
 }
 
+output "nat" {
+    description = "NAT gateway of the VPC."
+    value = aws_nat_gateway.nat_gateway
+}
+
 output "security_groups" {
     description = "Security groups for the VPC."
     value = aws_security_group.sg

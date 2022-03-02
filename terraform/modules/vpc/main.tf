@@ -71,14 +71,20 @@ resource "aws_subnet" "private" {
     depends_on = [aws_vpc.vpc]
 }
 
-# resource "aws_nat_gateway" "nat_gateway" {
-#     for_each = data.aws_subnet_ids.public.ids
-#     subnet_id = each.value
+resource "aws_eip" "eip" {
+    vpc = true
+}
 
-#     tag = {
-#         Name = "aline-kwi-nat-gateway"
-#     }
-# }
+resource "aws_nat_gateway" "nat_gateway" {
+    allocation_id = aws_eip.eip.id
+    subnet_id = aws_subnet.public[element(keys(aws_subnet.public), 0)]["id"]
+
+    tags = {
+        Name = "aline-kwi-nat-gateway"
+    }
+
+    depends_on = [aws_eip.eip, aws_subnet.public]
+}
 
 
 resource "aws_route_table" "public_route_table" {
@@ -96,18 +102,20 @@ resource "aws_route_table" "public_route_table" {
     depends_on = [aws_vpc.vpc, aws_internet_gateway.gateway]
 }
 
-# resource "aws_route_table" "private_route_table" {
-#     vpc_id = aws_vpc.vpc.id
+resource "aws_route_table" "private_route_table" {
+    vpc_id = aws_vpc.vpc.id
 
-#     route {
-#         cidr_block = "0.0.0.0/0"
-#         nat_gateway_id = aws_nat_gateway.nat_gateway.id
-#     }
+    route {
+        cidr_block = "0.0.0.0/0"
+        nat_gateway_id = aws_nat_gateway.nat_gateway.id
+    }
 
-#     tags = {
-#         Name = "aline-kwi-private-RT"
-#     }
-# }
+    tags = {
+        Name = "aline-kwi-private-RT"
+    }
+
+    depends_on = [aws_vpc.vpc, aws_nat_gateway.nat_gateway]
+}
 
 resource "aws_route_table_association" "public_association" {
     for_each = aws_subnet.public
@@ -116,10 +124,12 @@ resource "aws_route_table_association" "public_association" {
     depends_on = [aws_route_table.public_route_table, aws_subnet.public]
 }
 
-# resource "aws_route_table_association" "private_association" {
-#     subnet_id = aws_subnet.private_subnet.id
-#     route_table_id = aws_route_table.private_route_table.id
-# }
+resource "aws_route_table_association" "private_association" {
+    for_each = aws_subnet.private
+    subnet_id = each.value["id"]
+    route_table_id = aws_route_table.private_route_table.id
+    depends_on = [aws_route_table.private_route_table, aws_subnet.private]
+}
 
 resource "aws_lb" "alb" {
     name = var.alb

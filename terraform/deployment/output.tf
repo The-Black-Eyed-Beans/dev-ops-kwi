@@ -14,6 +14,10 @@ output "gateway" {
     value = module.vpc.gateway
 }
 
+output "nat" {
+    value = module.vpc.nat
+}
+
 output "security_groups" {
     value = module.vpc.security_groups
 }
