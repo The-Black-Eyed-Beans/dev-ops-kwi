@@ -23,14 +23,14 @@ pipeline {
         stage("Plan") {
             steps {
                 echo "Creating Terraform Plan"
-                sh "terraform plan -var-file=deployment/input.tfvars -out out/output.tf"
+                sh "terraform plan -var-file=terraform/deployment/input.tfvars -out terraform/out/output.tf"
             }
         }
 
         stage("Apply") {
             steps {
                 echo "Applying Terraform Plan"
-                sh "terraform apply -auto-approve -no-color output.tf"
+                sh "terraform apply -auto-approve -no-color terraform/out/output.tf"
             }
         }
     }
