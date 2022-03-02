@@ -6,7 +6,6 @@ pipeline {
         BUCKET_KWI = credentials("BUCKET-KWI")
         KEY_NAME = "aline-kwi-infra"
         DEPLOY_DIR = "terraform/deployment"
-        AWS_PROFILE = "keshaun"
     }
 
     stages {
@@ -18,8 +17,9 @@ pipeline {
                     terraform init \
                         -no-color \
                         -backend-config="bucket=${BUCKET_KWI}" \
-                        -backend-config="key=${KEY_NAME}.tfstate" \
-                        -backend-config="region=${REGION_KWI}"
+                        -backend-config="key=${KEY_NAME}.t2state" \
+                        -backend-config="region=${REGION_KWI}" \
+                        -backend-config="profile=keshaun"
                     """
                 }
             }
