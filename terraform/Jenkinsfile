@@ -5,7 +5,7 @@ pipeline {
         REGION_KWI = credentials("REGION-KWI")
         BUCKET_KWI = credentials("BUCKET-KWI")
         KEY_NAME = "aline-kwi-infra"
-        AWS_PROFILE = "keshaun"
+        // AWS_PROFILE = "keshaun"
     }
 
     stages {
@@ -15,9 +15,11 @@ pipeline {
                 dir ("terraform/deployment") {
                     sh """
                     terraform init \
+                        -no-color \
                         -backend-config="bucket=${BUCKET_KWI}" \
                         -backend-config="key=${KEY_NAME}" \
-                        -backend-config="region=${REGION_KWI}"
+                        -backend-config="region=${REGION_KWI}" \
+                        -backend-config="profile=keshaun"
                     """
                 }
             }
@@ -27,7 +29,7 @@ pipeline {
             steps {
                 echo "Creating Terraform Plan"
                 dir ("terraform/deployment") {
-                    sh "terraform plan -var-file=input.tfvars -out out.tf"
+                    sh "terraform plan -var-file=input.tfvars -no-color -out out.tf"
                 }
             }
         }
