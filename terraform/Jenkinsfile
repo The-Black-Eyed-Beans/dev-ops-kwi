@@ -6,6 +6,7 @@ pipeline {
         BUCKET_KWI = credentials("BUCKET-KWI")
         KEY_NAME = "aline-kwi-infra"
         DEPLOY_DIR = "terraform/deployment"
+        COMMIT_HASH = "${sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()}"
     }
 
     stages {
@@ -38,7 +39,8 @@ pipeline {
             steps {
                 echo "Applying Terraform Plan"
                 dir ("${DEPLOY_DIR}") {
-                    sh "terraform apply -auto-approve -no-color out.tf"
+                    sh "terraform apply -auto-approve -no-color out.tf > output-${COMMIT_HASH}.txt"
+                    sh "aws s3 --profile keshaun cp output-${COMMIT_HASH}.txt s3://${BUCKET_KWI}/output/"
                 }
             }
         }
@@ -47,6 +49,7 @@ pipeline {
     post {
         always {
             sh "rm ${DEPLOY_DIR}/out.tf"
+            sh "rm ${DEPLOY_DIR}/output-${COMMIT_HASH}.txt"
         }
     }
 }
