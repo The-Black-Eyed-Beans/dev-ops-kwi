@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: transaction
-        image: keshaunw/transaction-microservice
+        image: 086620157175.dkr.ecr.us-east-1.amazonaws.com/transaction-microservice-kwi
         ports:
         - name: transaction
           containerPort: 8073

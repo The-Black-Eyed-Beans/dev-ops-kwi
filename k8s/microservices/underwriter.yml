@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: underwriter
-        image: keshaunw/underwriter-microservice
+        image: 086620157175.dkr.ecr.us-east-1.amazonaws.com/underwriter-microservice-kwi
         ports:
         - name: underwriter
           containerPort: 8071

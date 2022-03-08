@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: bank
-        image: keshaunw/bank-microservice
+        image: 086620157175.dkr.ecr.us-east-1.amazonaws.com/bank-microservice-kwi
         ports:
         - name: bank
           containerPort: 8083

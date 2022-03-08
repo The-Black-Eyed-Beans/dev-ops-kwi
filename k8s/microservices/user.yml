@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: user
-        image: keshaunw/user-microservice
+        image: 086620157175.dkr.ecr.us-east-1.amazonaws.com/user-microservice-kwi
         ports:
         - name: user
           containerPort: 8070
