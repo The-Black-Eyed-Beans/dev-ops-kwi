@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: gateway
-        image: keshaunw/gateway
+        image: 086620157175.dkr.ecr.us-east-1.amazonaws.com/gateway-kwi
         
         ports:
         - containerPort: 8080
