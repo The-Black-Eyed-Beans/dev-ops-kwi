@@ -1,0 +1,89 @@
+version: '3'
+services:
+  account:
+    environment:
+      APP_PORT: 8072
+    env_file:
+      - ./.env
+    image: 086620157175.dkr.ecr.us-east-1.amazonaws.com/account-microservice
+    ports:
+      # - target: 8072
+      #   x-aws-protocol: http
+      - "8072:8072"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+  
+  bank:
+    environment:
+      APP_PORT: 8083
+    env_file:
+      - ./.env
+    image: 086620157175.dkr.ecr.us-east-1.amazonaws.com/bank-microservice
+    ports:
+      # - target: 8083
+      #   x-aws-protocol: http
+      - "8083:8083"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  transaction:
+    environment:
+      APP_PORT: 8073
+    env_file:
+      - ./.env
+    image: 086620157175.dkr.ecr.us-east-1.amazonaws.com/transaction-microservice
+    ports:
+      # - target: 8073
+      #   x-aws-protocol: http
+      - "8073:8073"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  underwriter:
+    environment:
+      APP_PORT: 8071
+    env_file:
+      - ./.env
+    image: 086620157175.dkr.ecr.us-east-1.amazonaws.com/underwriter-microservice
+    ports:
+      # - target: 8071
+      #   x-aws-protocol: http
+      - "8071:8071"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  user:
+    environment:
+      APP_PORT: 8070
+    env_file:
+      - ./.env
+    image: 086620157175.dkr.ecr.us-east-1.amazonaws.com/user-microservice
+    ports:
+      # - target: 8070
+      #   x-aws-protocol: http
+      - "8070:8070"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  gateway:
+    environment:
+      APP_PORT: 80
+      APP_SERVICE_HOST: aline-loadb-62fmevibc5sw-1946409621.us-east-1.elb.amazonaws.com
+    env_file:
+      - ./.env
+    image: 086620157175.dkr.ecr.us-east-1.amazonaws.com/gateway
+    ports:
+      # - target: 80
+      #   x-aws-protocol: http
+      - "80:80"
+  
