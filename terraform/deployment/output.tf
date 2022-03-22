@@ -18,12 +18,20 @@ output "nat" {
     value = module.vpc.nat
 }
 
-output "security_groups" {
-    value = module.vpc.security_groups
+output "app_security_group" {
+    value = module.vpc.microservice_sg
 }
 
-output "load_balancer" {
-    value = module.vpc.alb
+output "gateway_security_group" {
+    value = module.vpc.gateway_sg
+}
+
+output "app_load_balancer" {
+    value = module.vpc.micro_alb
+}
+
+output "gateway_load_balancer" {
+    value = module.vpc.gate_alb
 }
 
 output "ecs" {
@@ -32,4 +40,8 @@ output "ecs" {
 
 output "eks" {
     value = module.eks.eks
+}
+
+output "resources_secrets" {
+    value = module.secret.resources
 }

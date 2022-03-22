@@ -1,0 +1,1035 @@
+{
+  "ecs": {
+    "sensitive": false,
+    "type": [
+      "object",
+      {
+        "arn": "string",
+        "capacity_providers": [
+          "set",
+          "string"
+        ],
+        "configuration": [
+          "list",
+          [
+            "object",
+            {
+              "execute_command_configuration": [
+                "list",
+                [
+                  "object",
+                  {
+                    "kms_key_id": "string",
+                    "log_configuration": [
+                      "list",
+                      [
+                        "object",
+                        {
+                          "cloud_watch_encryption_enabled": "bool",
+                          "cloud_watch_log_group_name": "string",
+                          "s3_bucket_encryption_enabled": "bool",
+                          "s3_bucket_name": "string",
+                          "s3_key_prefix": "string"
+                        }
+                      ]
+                    ],
+                    "logging": "string"
+                  }
+                ]
+              ]
+            }
+          ]
+        ],
+        "default_capacity_provider_strategy": [
+          "set",
+          [
+            "object",
+            {
+              "base": "number",
+              "capacity_provider": "string",
+              "weight": "number"
+            }
+          ]
+        ],
+        "id": "string",
+        "name": "string",
+        "setting": [
+          "set",
+          [
+            "object",
+            {
+              "name": "string",
+              "value": "string"
+            }
+          ]
+        ],
+        "tags": [
+          "map",
+          "string"
+        ],
+        "tags_all": [
+          "map",
+          "string"
+        ]
+      }
+    ],
+    "value": {
+      "arn": "arn:aws:ecs:us-east-1:086620157175:cluster/aline-kwi-ecs",
+      "capacity_providers": [],
+      "configuration": [],
+      "default_capacity_provider_strategy": [],
+      "id": "arn:aws:ecs:us-east-1:086620157175:cluster/aline-kwi-ecs",
+      "name": "aline-kwi-ecs",
+      "setting": [
+        {
+          "name": "containerInsights",
+          "value": "enabled"
+        }
+      ],
+      "tags": {
+        "Name": "aline-kwi-ecs"
+      },
+      "tags_all": {
+        "Name": "aline-kwi-ecs"
+      }
+    }
+  },
+  "eks": {
+    "sensitive": false,
+    "type": [
+      "object",
+      {
+        "arn": "string",
+        "certificate_authority": [
+          "list",
+          [
+            "object",
+            {
+              "data": "string"
+            }
+          ]
+        ],
+        "created_at": "string",
+        "enabled_cluster_log_types": [
+          "set",
+          "string"
+        ],
+        "encryption_config": [
+          "list",
+          [
+            "object",
+            {
+              "provider": [
+                "list",
+                [
+                  "object",
+                  {
+                    "key_arn": "string"
+                  }
+                ]
+              ],
+              "resources": [
+                "set",
+                "string"
+              ]
+            }
+          ]
+        ],
+        "endpoint": "string",
+        "id": "string",
+        "identity": [
+          "list",
+          [
+            "object",
+            {
+              "oidc": [
+                "list",
+                [
+                  "object",
+                  {
+                    "issuer": "string"
+                  }
+                ]
+              ]
+            }
+          ]
+        ],
+        "kubernetes_network_config": [
+          "list",
+          [
+            "object",
+            {
+              "ip_family": "string",
+              "service_ipv4_cidr": "string"
+            }
+          ]
+        ],
+        "name": "string",
+        "platform_version": "string",
+        "role_arn": "string",
+        "status": "string",
+        "tags": [
+          "map",
+          "string"
+        ],
+        "tags_all": [
+          "map",
+          "string"
+        ],
+        "timeouts": [
+          "object",
+          {
+            "create": "string",
+            "delete": "string",
+            "update": "string"
+          }
+        ],
+        "version": "string",
+        "vpc_config": [
+          "list",
+          [
+            "object",
+            {
+              "cluster_security_group_id": "string",
+              "endpoint_private_access": "bool",
+              "endpoint_public_access": "bool",
+              "public_access_cidrs": [
+                "set",
+                "string"
+              ],
+              "security_group_ids": [
+                "set",
+                "string"
+              ],
+              "subnet_ids": [
+                "set",
+                "string"
+              ],
+              "vpc_id": "string"
+            }
+          ]
+        ]
+      }
+    ],
+    "value": {
+      "arn": "arn:aws:eks:us-east-1:086620157175:cluster/aline-kwi-eks",
+      "certificate_authority": [
+        {
+          "data": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUM1ekNDQWMrZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwcmRXSmwKY201bGRHVnpNQjRYRFRJeU1ETXdPREUzTVRZeE1Wb1hEVE15TURNd05URTNNVFl4TVZvd0ZURVRNQkVHQTFVRQpBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBTHlQCnFnVEplQ3dCR2hzQ0VKbUhXWkhabWdldndRU1VqdEFXZWgveXlGRnFYZkxEY0hteCs2U2NETnpyK0o4Y08xZm4KZFhjbTA0WVNmSForQ3dTWmpqRUpLd2IrbEQvZXFldktMWnNhRDdieGt4eVJPVjZ0YTVOOFNuY0pRY0dwa2E2QQpLS0gzWGkzVGVjZmhlYU1qWFVGWkVobS9WVUd0SVlUNVljVXhOa0tzZzF2OVNxTUF0K3V2VlRwbU53b0xGSEx4Cklrbmg0N3JIcm5OWE45clVIaGlzRUxETGx0eXdBNVllVlh0VGNTamIzSEpXWFFZOU03MUZkWEVKc1c2N1dIanYKd1grcUZiTmIvR0l6VXlaT2tYV3hHSFF2clR0TElFTFJPaGM5dG93eFkyMW9Rd3dwaDVpZ25rTWRUdTZEUGFsNgpTTkYwdHhmWnF1T1l0bzZHODFFQ0F3RUFBYU5DTUVBd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCCi93UUZNQU1CQWY4d0hRWURWUjBPQkJZRUZMZ25xU01TNE9IQTJ6NUZFRXVtM3ZHQVdacjNNQTBHQ1NxR1NJYjMKRFFFQkN3VUFBNElCQVFBWjN0UmhQaWRRSmRvdGxaTE1xbGhFdEsvb0t3SmVBZENacllyTU91eC9jUy8wTUVhbQo1Tys1SkpqcVBFMlZHa2tzMHRBRUdGRUdoaXhORWM1RWVwUnlzdG95V0pQY0g5UHl1OEVOT2owTWhzVGdpeW1oCm9WQkFIY2pPYWVHSXNBS0lqZ1liZE5sa1JycnZ6c0JvSXBNaHc1SUVCeTJMcWJuYmkxSU1McjFmNHN6TE4rZGkKOEhNQmpJRGhJbWkwdThGWXRIQ0QvQkZZOHdEaWVHYnFDZ25xcytZUzRGUHBoSzEzR2xWNVZhZ29DeURmdWFGUwpMTkRRcVp3cTdSSng5M1krY3RjY2NPOU9sTXlnNkJkejhsWkRlREZmZ1Aza0g3UUlFL2RZN2xnWU5GV3dMQWw1CmN6ckJ6UUJUNFdhakd2NE1CYUg5a25NenZLUi9leG45TmFrRgotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg=="
+        }
+      ],
+      "created_at": "2022-03-08 17:09:42.623 +0000 UTC",
+      "enabled_cluster_log_types": [],
+      "encryption_config": [],
+      "endpoint": "https://A2B97AF688B693B16E3CDCB83FE29164.gr7.us-east-1.eks.amazonaws.com",
+      "id": "aline-kwi-eks",
+      "identity": [
+        {
+          "oidc": [
+            {
+              "issuer": "https://oidc.eks.us-east-1.amazonaws.com/id/A2B97AF688B693B16E3CDCB83FE29164"
+            }
+          ]
+        }
+      ],
+      "kubernetes_network_config": [
+        {
+          "ip_family": "ipv4",
+          "service_ipv4_cidr": "10.100.0.0/16"
+        }
+      ],
+      "name": "aline-kwi-eks",
+      "platform_version": "eks.4",
+      "role_arn": "arn:aws:iam::086620157175:role/aline-kwi-eks-role",
+      "status": "ACTIVE",
+      "tags": {
+        "Name": "aline-kwi-eks"
+      },
+      "tags_all": {
+        "Name": "aline-kwi-eks"
+      },
+      "timeouts": null,
+      "version": "1.21",
+      "vpc_config": [
+        {
+          "cluster_security_group_id": "sg-07b8d1d73150c3777",
+          "endpoint_private_access": true,
+          "endpoint_public_access": true,
+          "public_access_cidrs": [
+            "0.0.0.0/0"
+          ],
+          "security_group_ids": [],
+          "subnet_ids": [
+            "subnet-05d3b911a206e3f3d",
+            "subnet-0ab7193d1912861d4"
+          ],
+          "vpc_id": "vpc-0b6b866a468a61f4f"
+        }
+      ]
+    }
+  },
+  "gateway": {
+    "sensitive": false,
+    "type": [
+      "object",
+      {
+        "arn": "string",
+        "id": "string",
+        "owner_id": "string",
+        "tags": [
+          "map",
+          "string"
+        ],
+        "tags_all": [
+          "map",
+          "string"
+        ],
+        "vpc_id": "string"
+      }
+    ],
+    "value": {
+      "arn": "arn:aws:ec2:us-east-1:086620157175:internet-gateway/igw-005e9f0a7e8df39ad",
+      "id": "igw-005e9f0a7e8df39ad",
+      "owner_id": "086620157175",
+      "tags": {
+        "Name": "aline-kwi-ig"
+      },
+      "tags_all": {
+        "Name": "aline-kwi-ig"
+      },
+      "vpc_id": "vpc-0b6b866a468a61f4f"
+    }
+  },
+  "load_balancer": {
+    "sensitive": false,
+    "type": [
+      "object",
+      {
+        "access_logs": [
+          "list",
+          [
+            "object",
+            {
+              "bucket": "string",
+              "enabled": "bool",
+              "prefix": "string"
+            }
+          ]
+        ],
+        "arn": "string",
+        "arn_suffix": "string",
+        "customer_owned_ipv4_pool": "string",
+        "desync_mitigation_mode": "string",
+        "dns_name": "string",
+        "drop_invalid_header_fields": "bool",
+        "enable_cross_zone_load_balancing": "bool",
+        "enable_deletion_protection": "bool",
+        "enable_http2": "bool",
+        "enable_waf_fail_open": "bool",
+        "id": "string",
+        "idle_timeout": "number",
+        "internal": "bool",
+        "ip_address_type": "string",
+        "load_balancer_type": "string",
+        "name": "string",
+        "name_prefix": "string",
+        "security_groups": [
+          "set",
+          "string"
+        ],
+        "subnet_mapping": [
+          "set",
+          [
+            "object",
+            {
+              "allocation_id": "string",
+              "ipv6_address": "string",
+              "outpost_id": "string",
+              "private_ipv4_address": "string",
+              "subnet_id": "string"
+            }
+          ]
+        ],
+        "subnets": [
+          "set",
+          "string"
+        ],
+        "tags": [
+          "map",
+          "string"
+        ],
+        "tags_all": [
+          "map",
+          "string"
+        ],
+        "timeouts": [
+          "object",
+          {
+            "create": "string",
+            "delete": "string",
+            "update": "string"
+          }
+        ],
+        "vpc_id": "string",
+        "zone_id": "string"
+      }
+    ],
+    "value": {
+      "access_logs": [
+        {
+          "bucket": "",
+          "enabled": false,
+          "prefix": ""
+        }
+      ],
+      "arn": "arn:aws:elasticloadbalancing:us-east-1:086620157175:loadbalancer/app/aline-kwi-alb/4071c7c35bc6ab2d",
+      "arn_suffix": "app/aline-kwi-alb/4071c7c35bc6ab2d",
+      "customer_owned_ipv4_pool": "",
+      "desync_mitigation_mode": "defensive",
+      "dns_name": "aline-kwi-alb-691042153.us-east-1.elb.amazonaws.com",
+      "drop_invalid_header_fields": false,
+      "enable_cross_zone_load_balancing": null,
+      "enable_deletion_protection": false,
+      "enable_http2": true,
+      "enable_waf_fail_open": false,
+      "id": "arn:aws:elasticloadbalancing:us-east-1:086620157175:loadbalancer/app/aline-kwi-alb/4071c7c35bc6ab2d",
+      "idle_timeout": 60,
+      "internal": false,
+      "ip_address_type": "ipv4",
+      "load_balancer_type": "application",
+      "name": "aline-kwi-alb",
+      "name_prefix": null,
+      "security_groups": [
+        "sg-02ede33163c08a6dc"
+      ],
+      "subnet_mapping": [
+        {
+          "allocation_id": "",
+          "ipv6_address": "",
+          "outpost_id": "",
+          "private_ipv4_address": "",
+          "subnet_id": "subnet-054e31018ac77d218"
+        },
+        {
+          "allocation_id": "",
+          "ipv6_address": "",
+          "outpost_id": "",
+          "private_ipv4_address": "",
+          "subnet_id": "subnet-09785d8b34c2b2789"
+        }
+      ],
+      "subnets": [
+        "subnet-054e31018ac77d218",
+        "subnet-09785d8b34c2b2789"
+      ],
+      "tags": null,
+      "tags_all": {},
+      "timeouts": null,
+      "vpc_id": "vpc-0b6b866a468a61f4f",
+      "zone_id": "Z35SXDOTRQ7X7K"
+    }
+  },
+  "nat": {
+    "sensitive": false,
+    "type": [
+      "object",
+      {
+        "allocation_id": "string",
+        "connectivity_type": "string",
+        "id": "string",
+        "network_interface_id": "string",
+        "private_ip": "string",
+        "public_ip": "string",
+        "subnet_id": "string",
+        "tags": [
+          "map",
+          "string"
+        ],
+        "tags_all": [
+          "map",
+          "string"
+        ]
+      }
+    ],
+    "value": {
+      "allocation_id": "eipalloc-07675ef489bd43697",
+      "connectivity_type": "public",
+      "id": "nat-032917140ba04c70a",
+      "network_interface_id": "eni-0c3a0a4080e6f8070",
+      "private_ip": "12.22.1.35",
+      "public_ip": "34.205.151.252",
+      "subnet_id": "subnet-054e31018ac77d218",
+      "tags": {
+        "Name": "aline-kwi-nat-gateway"
+      },
+      "tags_all": {
+        "Name": "aline-kwi-nat-gateway"
+      }
+    }
+  },
+  "private": {
+    "sensitive": false,
+    "type": [
+      "object",
+      {
+        "subnet3": [
+          "object",
+          {
+            "arn": "string",
+            "assign_ipv6_address_on_creation": "bool",
+            "availability_zone": "string",
+            "availability_zone_id": "string",
+            "cidr_block": "string",
+            "customer_owned_ipv4_pool": "string",
+            "enable_dns64": "bool",
+            "enable_resource_name_dns_a_record_on_launch": "bool",
+            "enable_resource_name_dns_aaaa_record_on_launch": "bool",
+            "id": "string",
+            "ipv6_cidr_block": "string",
+            "ipv6_cidr_block_association_id": "string",
+            "ipv6_native": "bool",
+            "map_customer_owned_ip_on_launch": "bool",
+            "map_public_ip_on_launch": "bool",
+            "outpost_arn": "string",
+            "owner_id": "string",
+            "private_dns_hostname_type_on_launch": "string",
+            "tags": [
+              "map",
+              "string"
+            ],
+            "tags_all": [
+              "map",
+              "string"
+            ],
+            "timeouts": [
+              "object",
+              {
+                "create": "string",
+                "delete": "string"
+              }
+            ],
+            "vpc_id": "string"
+          }
+        ],
+        "subnet4": [
+          "object",
+          {
+            "arn": "string",
+            "assign_ipv6_address_on_creation": "bool",
+            "availability_zone": "string",
+            "availability_zone_id": "string",
+            "cidr_block": "string",
+            "customer_owned_ipv4_pool": "string",
+            "enable_dns64": "bool",
+            "enable_resource_name_dns_a_record_on_launch": "bool",
+            "enable_resource_name_dns_aaaa_record_on_launch": "bool",
+            "id": "string",
+            "ipv6_cidr_block": "string",
+            "ipv6_cidr_block_association_id": "string",
+            "ipv6_native": "bool",
+            "map_customer_owned_ip_on_launch": "bool",
+            "map_public_ip_on_launch": "bool",
+            "outpost_arn": "string",
+            "owner_id": "string",
+            "private_dns_hostname_type_on_launch": "string",
+            "tags": [
+              "map",
+              "string"
+            ],
+            "tags_all": [
+              "map",
+              "string"
+            ],
+            "timeouts": [
+              "object",
+              {
+                "create": "string",
+                "delete": "string"
+              }
+            ],
+            "vpc_id": "string"
+          }
+        ]
+      }
+    ],
+    "value": {
+      "subnet3": {
+        "arn": "arn:aws:ec2:us-east-1:086620157175:subnet/subnet-0ab7193d1912861d4",
+        "assign_ipv6_address_on_creation": false,
+        "availability_zone": "us-east-1a",
+        "availability_zone_id": "use1-az2",
+        "cidr_block": "12.22.3.0/24",
+        "customer_owned_ipv4_pool": "",
+        "enable_dns64": false,
+        "enable_resource_name_dns_a_record_on_launch": false,
+        "enable_resource_name_dns_aaaa_record_on_launch": false,
+        "id": "subnet-0ab7193d1912861d4",
+        "ipv6_cidr_block": "",
+        "ipv6_cidr_block_association_id": "",
+        "ipv6_native": false,
+        "map_customer_owned_ip_on_launch": false,
+        "map_public_ip_on_launch": false,
+        "outpost_arn": "",
+        "owner_id": "086620157175",
+        "private_dns_hostname_type_on_launch": "ip-name",
+        "tags": {
+          "Name": "aline-kwi-private-1",
+          "Tier": "Private"
+        },
+        "tags_all": {
+          "Name": "aline-kwi-private-1",
+          "Tier": "Private"
+        },
+        "timeouts": null,
+        "vpc_id": "vpc-0b6b866a468a61f4f"
+      },
+      "subnet4": {
+        "arn": "arn:aws:ec2:us-east-1:086620157175:subnet/subnet-05d3b911a206e3f3d",
+        "assign_ipv6_address_on_creation": false,
+        "availability_zone": "us-east-1b",
+        "availability_zone_id": "use1-az4",
+        "cidr_block": "12.22.4.0/24",
+        "customer_owned_ipv4_pool": "",
+        "enable_dns64": false,
+        "enable_resource_name_dns_a_record_on_launch": false,
+        "enable_resource_name_dns_aaaa_record_on_launch": false,
+        "id": "subnet-05d3b911a206e3f3d",
+        "ipv6_cidr_block": "",
+        "ipv6_cidr_block_association_id": "",
+        "ipv6_native": false,
+        "map_customer_owned_ip_on_launch": false,
+        "map_public_ip_on_launch": false,
+        "outpost_arn": "",
+        "owner_id": "086620157175",
+        "private_dns_hostname_type_on_launch": "ip-name",
+        "tags": {
+          "Name": "aline-kwi-private-2",
+          "Tier": "Private"
+        },
+        "tags_all": {
+          "Name": "aline-kwi-private-2",
+          "Tier": "Private"
+        },
+        "timeouts": null,
+        "vpc_id": "vpc-0b6b866a468a61f4f"
+      }
+    }
+  },
+  "public": {
+    "sensitive": false,
+    "type": [
+      "object",
+      {
+        "subnet1": [
+          "object",
+          {
+            "arn": "string",
+            "assign_ipv6_address_on_creation": "bool",
+            "availability_zone": "string",
+            "availability_zone_id": "string",
+            "cidr_block": "string",
+            "customer_owned_ipv4_pool": "string",
+            "enable_dns64": "bool",
+            "enable_resource_name_dns_a_record_on_launch": "bool",
+            "enable_resource_name_dns_aaaa_record_on_launch": "bool",
+            "id": "string",
+            "ipv6_cidr_block": "string",
+            "ipv6_cidr_block_association_id": "string",
+            "ipv6_native": "bool",
+            "map_customer_owned_ip_on_launch": "bool",
+            "map_public_ip_on_launch": "bool",
+            "outpost_arn": "string",
+            "owner_id": "string",
+            "private_dns_hostname_type_on_launch": "string",
+            "tags": [
+              "map",
+              "string"
+            ],
+            "tags_all": [
+              "map",
+              "string"
+            ],
+            "timeouts": [
+              "object",
+              {
+                "create": "string",
+                "delete": "string"
+              }
+            ],
+            "vpc_id": "string"
+          }
+        ],
+        "subnet2": [
+          "object",
+          {
+            "arn": "string",
+            "assign_ipv6_address_on_creation": "bool",
+            "availability_zone": "string",
+            "availability_zone_id": "string",
+            "cidr_block": "string",
+            "customer_owned_ipv4_pool": "string",
+            "enable_dns64": "bool",
+            "enable_resource_name_dns_a_record_on_launch": "bool",
+            "enable_resource_name_dns_aaaa_record_on_launch": "bool",
+            "id": "string",
+            "ipv6_cidr_block": "string",
+            "ipv6_cidr_block_association_id": "string",
+            "ipv6_native": "bool",
+            "map_customer_owned_ip_on_launch": "bool",
+            "map_public_ip_on_launch": "bool",
+            "outpost_arn": "string",
+            "owner_id": "string",
+            "private_dns_hostname_type_on_launch": "string",
+            "tags": [
+              "map",
+              "string"
+            ],
+            "tags_all": [
+              "map",
+              "string"
+            ],
+            "timeouts": [
+              "object",
+              {
+                "create": "string",
+                "delete": "string"
+              }
+            ],
+            "vpc_id": "string"
+          }
+        ]
+      }
+    ],
+    "value": {
+      "subnet1": {
+        "arn": "arn:aws:ec2:us-east-1:086620157175:subnet/subnet-054e31018ac77d218",
+        "assign_ipv6_address_on_creation": false,
+        "availability_zone": "us-east-1a",
+        "availability_zone_id": "use1-az2",
+        "cidr_block": "12.22.1.0/24",
+        "customer_owned_ipv4_pool": "",
+        "enable_dns64": false,
+        "enable_resource_name_dns_a_record_on_launch": false,
+        "enable_resource_name_dns_aaaa_record_on_launch": false,
+        "id": "subnet-054e31018ac77d218",
+        "ipv6_cidr_block": "",
+        "ipv6_cidr_block_association_id": "",
+        "ipv6_native": false,
+        "map_customer_owned_ip_on_launch": false,
+        "map_public_ip_on_launch": true,
+        "outpost_arn": "",
+        "owner_id": "086620157175",
+        "private_dns_hostname_type_on_launch": "ip-name",
+        "tags": {
+          "Name": "aline-kwi-public-1",
+          "Tier": "Public"
+        },
+        "tags_all": {
+          "Name": "aline-kwi-public-1",
+          "Tier": "Public"
+        },
+        "timeouts": null,
+        "vpc_id": "vpc-0b6b866a468a61f4f"
+      },
+      "subnet2": {
+        "arn": "arn:aws:ec2:us-east-1:086620157175:subnet/subnet-09785d8b34c2b2789",
+        "assign_ipv6_address_on_creation": false,
+        "availability_zone": "us-east-1b",
+        "availability_zone_id": "use1-az4",
+        "cidr_block": "12.22.2.0/24",
+        "customer_owned_ipv4_pool": "",
+        "enable_dns64": false,
+        "enable_resource_name_dns_a_record_on_launch": false,
+        "enable_resource_name_dns_aaaa_record_on_launch": false,
+        "id": "subnet-09785d8b34c2b2789",
+        "ipv6_cidr_block": "",
+        "ipv6_cidr_block_association_id": "",
+        "ipv6_native": false,
+        "map_customer_owned_ip_on_launch": false,
+        "map_public_ip_on_launch": true,
+        "outpost_arn": "",
+        "owner_id": "086620157175",
+        "private_dns_hostname_type_on_launch": "ip-name",
+        "tags": {
+          "Name": "aline-kwi-public-2",
+          "Tier": "Public"
+        },
+        "tags_all": {
+          "Name": "aline-kwi-public-2",
+          "Tier": "Public"
+        },
+        "timeouts": null,
+        "vpc_id": "vpc-0b6b866a468a61f4f"
+      }
+    }
+  },
+  "security_groups": {
+    "sensitive": false,
+    "type": [
+      "object",
+      {
+        "arn": "string",
+        "description": "string",
+        "egress": [
+          "set",
+          [
+            "object",
+            {
+              "cidr_blocks": [
+                "list",
+                "string"
+              ],
+              "description": "string",
+              "from_port": "number",
+              "ipv6_cidr_blocks": [
+                "list",
+                "string"
+              ],
+              "prefix_list_ids": [
+                "list",
+                "string"
+              ],
+              "protocol": "string",
+              "security_groups": [
+                "set",
+                "string"
+              ],
+              "self": "bool",
+              "to_port": "number"
+            }
+          ]
+        ],
+        "id": "string",
+        "ingress": [
+          "set",
+          [
+            "object",
+            {
+              "cidr_blocks": [
+                "list",
+                "string"
+              ],
+              "description": "string",
+              "from_port": "number",
+              "ipv6_cidr_blocks": [
+                "list",
+                "string"
+              ],
+              "prefix_list_ids": [
+                "list",
+                "string"
+              ],
+              "protocol": "string",
+              "security_groups": [
+                "set",
+                "string"
+              ],
+              "self": "bool",
+              "to_port": "number"
+            }
+          ]
+        ],
+        "name": "string",
+        "name_prefix": "string",
+        "owner_id": "string",
+        "revoke_rules_on_delete": "bool",
+        "tags": [
+          "map",
+          "string"
+        ],
+        "tags_all": [
+          "map",
+          "string"
+        ],
+        "timeouts": [
+          "object",
+          {
+            "create": "string",
+            "delete": "string"
+          }
+        ],
+        "vpc_id": "string"
+      }
+    ],
+    "value": {
+      "arn": "arn:aws:ec2:us-east-1:086620157175:security-group/sg-02ede33163c08a6dc",
+      "description": "aline-kwi-sg",
+      "egress": [
+        {
+          "cidr_blocks": [
+            "0.0.0.0/0"
+          ],
+          "description": "",
+          "from_port": 0,
+          "ipv6_cidr_blocks": [],
+          "prefix_list_ids": [],
+          "protocol": "-1",
+          "security_groups": [],
+          "self": false,
+          "to_port": 0
+        }
+      ],
+      "id": "sg-02ede33163c08a6dc",
+      "ingress": [
+        {
+          "cidr_blocks": [
+            "0.0.0.0/0"
+          ],
+          "description": "",
+          "from_port": 8070,
+          "ipv6_cidr_blocks": [],
+          "prefix_list_ids": [],
+          "protocol": "tcp",
+          "security_groups": [],
+          "self": true,
+          "to_port": 8070
+        },
+        {
+          "cidr_blocks": [
+            "0.0.0.0/0"
+          ],
+          "description": "",
+          "from_port": 8071,
+          "ipv6_cidr_blocks": [],
+          "prefix_list_ids": [],
+          "protocol": "tcp",
+          "security_groups": [],
+          "self": true,
+          "to_port": 8071
+        },
+        {
+          "cidr_blocks": [
+            "0.0.0.0/0"
+          ],
+          "description": "",
+          "from_port": 8072,
+          "ipv6_cidr_blocks": [],
+          "prefix_list_ids": [],
+          "protocol": "tcp",
+          "security_groups": [],
+          "self": true,
+          "to_port": 8072
+        },
+        {
+          "cidr_blocks": [
+            "0.0.0.0/0"
+          ],
+          "description": "",
+          "from_port": 8073,
+          "ipv6_cidr_blocks": [],
+          "prefix_list_ids": [],
+          "protocol": "tcp",
+          "security_groups": [],
+          "self": true,
+          "to_port": 8073
+        },
+        {
+          "cidr_blocks": [
+            "0.0.0.0/0"
+          ],
+          "description": "",
+          "from_port": 8083,
+          "ipv6_cidr_blocks": [],
+          "prefix_list_ids": [],
+          "protocol": "tcp",
+          "security_groups": [],
+          "self": true,
+          "to_port": 8083
+        },
+        {
+          "cidr_blocks": [
+            "0.0.0.0/0"
+          ],
+          "description": "",
+          "from_port": 80,
+          "ipv6_cidr_blocks": [],
+          "prefix_list_ids": [],
+          "protocol": "tcp",
+          "security_groups": [],
+          "self": true,
+          "to_port": 80
+        }
+      ],
+      "name": "Security group for VPC",
+      "name_prefix": "",
+      "owner_id": "086620157175",
+      "revoke_rules_on_delete": false,
+      "tags": {
+        "Name": "aline-kwi-sg"
+      },
+      "tags_all": {
+        "Name": "aline-kwi-sg"
+      },
+      "timeouts": null,
+      "vpc_id": "vpc-0b6b866a468a61f4f"
+    }
+  },
+  "vpc": {
+    "sensitive": false,
+    "type": [
+      "object",
+      {
+        "arn": "string",
+        "assign_generated_ipv6_cidr_block": "bool",
+        "cidr_block": "string",
+        "default_network_acl_id": "string",
+        "default_route_table_id": "string",
+        "default_security_group_id": "string",
+        "dhcp_options_id": "string",
+        "enable_classiclink": "bool",
+        "enable_classiclink_dns_support": "bool",
+        "enable_dns_hostnames": "bool",
+        "enable_dns_support": "bool",
+        "id": "string",
+        "instance_tenancy": "string",
+        "ipv4_ipam_pool_id": "string",
+        "ipv4_netmask_length": "number",
+        "ipv6_association_id": "string",
+        "ipv6_cidr_block": "string",
+        "ipv6_cidr_block_network_border_group": "string",
+        "ipv6_ipam_pool_id": "string",
+        "ipv6_netmask_length": "number",
+        "main_route_table_id": "string",
+        "owner_id": "string",
+        "tags": [
+          "map",
+          "string"
+        ],
+        "tags_all": [
+          "map",
+          "string"
+        ]
+      }
+    ],
+    "value": {
+      "arn": "arn:aws:ec2:us-east-1:086620157175:vpc/vpc-0b6b866a468a61f4f",
+      "assign_generated_ipv6_cidr_block": false,
+      "cidr_block": "12.22.0.0/16",
+      "default_network_acl_id": "acl-0d90a59e1eceb45cd",
+      "default_route_table_id": "rtb-0cd7f2ec8e84be6cb",
+      "default_security_group_id": "sg-01517ce1b4351388f",
+      "dhcp_options_id": "dopt-006b2172107482238",
+      "enable_classiclink": false,
+      "enable_classiclink_dns_support": false,
+      "enable_dns_hostnames": false,
+      "enable_dns_support": true,
+      "id": "vpc-0b6b866a468a61f4f",
+      "instance_tenancy": "default",
+      "ipv4_ipam_pool_id": null,
+      "ipv4_netmask_length": null,
+      "ipv6_association_id": "",
+      "ipv6_cidr_block": "",
+      "ipv6_cidr_block_network_border_group": "",
+      "ipv6_ipam_pool_id": "",
+      "ipv6_netmask_length": 0,
+      "main_route_table_id": "rtb-0cd7f2ec8e84be6cb",
+      "owner_id": "086620157175",
+      "tags": {
+        "Name": "aline-kwi-vpc"
+      },
+      "tags_all": {
+        "Name": "aline-kwi-vpc"
+      }
+    }
+  }
+}

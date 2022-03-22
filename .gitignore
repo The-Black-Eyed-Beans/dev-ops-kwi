@@ -1,0 +1,6 @@
+.env
+k8s/config/
+terraform/deployment/.terraform
+terraform/deployment/.terraform.lock.hcl
+terraform/deployment/backend.hcl
+terraform/deployment/input.tfvars
