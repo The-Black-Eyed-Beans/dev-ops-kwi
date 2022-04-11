@@ -1,0 +1,47 @@
+- name: Create Bastion
+  hosts: localhost
+  connection: local
+
+  vars:
+    keypair: keshaun-ssh
+    instance_type: t2.micro
+    image: ami-0c02fb55956c7d316
+    subnet: subnet-038097ddcf4b5c4c4
+    region: us-east-1
+
+  tasks:
+    - name: Create Bastion Security Group
+      amazon.aws.ec2_group:
+        name: aline-kwi-bastion-sg
+        description: "Security group for Bastion Host"
+        vpc_id: vpc-016639ba0b8b7cacd
+        region: us-east-1
+        rules:
+          - proto: tcp
+            ports:
+              - 22
+            cidr_ip: 0.0.0.0/0
+            rule_desc: Allow access to SSH.
+
+    - name: Create Bastion host
+      amazon.aws.ec2_instance:
+        key_name: "{{ keypair }}"
+        instance_type: t2.micro
+        image_id: "{{ image }}"
+        vpc_subnet_id: "{{ subnet }}"
+        region: "{{ region }}"
+        security_group: aline-kwi-bastion-sg
+        user_data: "sudo yum install mysql -y"
+        tags:
+          Name: aline-kwi-bastion
+      register: bastion
+
+    - name: Debug for bastion
+      debug: msg="{{ item.instance_id }}"
+      loop: "{{ bastion.instances }}"
+
+    - name: Add new instance to to registered hosts
+      add_host:
+        hostname: "{{ item.public_ip_address }}"
+        groupname: bastion_group
+      loop: "{{ bastion.instances }}"
