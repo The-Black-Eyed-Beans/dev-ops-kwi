@@ -1,0 +1,88 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Deploying necessary infrastructure for EKS deployment.",
+    "Parameters": {
+        "EnvironmentType": {
+            "Description": "The Environment type of the stack.",
+            "Type": "String",
+            "Default": "dev",
+            "AllowedValues": ["dev", "test", "prod"],
+            "ConstraintDescription": "Specify either dev, test, or prod."
+        },
+        "PrivateSubnet1Id": {
+            "Type": "AWS::EC2::Subnet::Id",
+            "Description": "Id of the first private subnet of the VPC."
+        },
+        "PrivateSubnet2Id": {
+            "Type": "AWS::EC2::Subnet::Id",
+            "Description": "Id of the second private subnet of the VPC."
+        }
+    },
+
+    "Resources": {
+        "ClusterRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "RoleName": { "Fn::Sub": "aline-kwi-${EnvironmentType}-eks-role" },
+                "ManagedPolicyArns": [
+                    "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy",
+                    "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
+                ],
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Action": [ "sts:AssumeRole" ],
+                            "Principal": {
+                                "Service": [ "eks.amazonaws.com" ]
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+
+        "Cluster": {
+            "Type" : "AWS::EKS::Cluster",
+            "Properties": {
+                "Name": { "Fn::Sub": "aline-kwi-${EnvironmentType}-eks" },
+                "RoleArn": { "Fn::GetAtt": ["ClusterRole", "Arn"] },
+
+                "ResourcesVpcConfig": {
+                    "SubnetIds": [
+                        { "Fn::Sub": "${PrivateSubnet1Id}" },
+                        { "Fn::Sub": "${PrivateSubnet2Id}" }
+                    ],
+                    "EndpointPrivateAccess": true,
+                    "EndpointPublicAccess": true
+                },
+
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": { "Fn::Sub": "aline-kwi-${EnvironmentType}-eks" }
+                    }
+                ]
+            }
+        }
+    },
+
+    "Outputs": {
+        "EksCluster": {
+            "Description": "EKS Cluster for the project.",
+            "Value": { "Fn::GetAtt": ["Cluster", "Arn"] },
+            "Export": {
+                "Name": { "Fn::Sub": "${AWS::StackName}-EksCluster"}
+            }
+        },
+
+        "ClusterRole": {
+            "Description": "The Cluster role for the ECS cluster.",
+            "Value": { "Fn::GetAtt": ["ClusterRole", "Arn"] },
+            "Export": {
+                "Name": { "Fn::Sub": "${AWS::StackName}-ClusterRole"}
+            }
+        }
+    }
+}
