@@ -23,12 +23,22 @@ output "nat" {
     value = aws_nat_gateway.nat_gateway
 }
 
-output "security_groups" {
-    description = "Security groups for the VPC."
-    value = aws_security_group.sg
+output "microservice_sg" {
+    description = "Security group for the microservices."
+    value = aws_security_group.ms_sg
 }
 
-output "alb" {
-    description = "Application Load Balancer for the VPC."
-    value = aws_lb.alb
+output "gateway_sg" {
+    description = "Security group for the gateway."
+    value = aws_security_group.gate_sg
+}
+
+output "micro_alb" {
+    description = "Application Load Balancer for the microservices."
+    value = aws_lb.microservice_alb
+}
+
+output "gate_alb" {
+    description = "Application Load Balancer for the gateway."
+    value = aws_lb.gateway_alb
 }

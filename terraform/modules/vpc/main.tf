@@ -15,17 +15,21 @@ resource "aws_internet_gateway" "gateway" {
     }
 }
 
-resource "aws_security_group" "sg" {
-    for_each = var.vpc_sg
-    name = each.value["name"]
-    description = each.value["description"]
+resource "aws_security_group" "ms_sg" {
+    name = "Security group for Microservice ALB"
+    description = "aline-kwi-microservice-sg"
     vpc_id = aws_vpc.vpc.id
 
-    ingress {
-        from_port = each.value["from_port"]
-        to_port = each.value["to_port"]
-        protocol = each.value["protocol"]
-        cidr_blocks = ["0.0.0.0/0"]
+    dynamic "ingress" {
+        for_each = var.vpc_sg
+        content {
+            from_port = ingress.value
+            to_port = ingress.value
+            protocol = "tcp"
+            cidr_blocks = ["0.0.0.0/0"]
+            # security_groups = [aws_security_group.gate_sg.id]
+            # self = true
+        }
     }
 
     egress {
@@ -36,7 +40,58 @@ resource "aws_security_group" "sg" {
     }
 
     tags = {
-        Name = "aline-kwi-sg"
+        Name = "aline-kwi-microservice-sg"
+    }
+    depends_on = [aws_vpc.vpc]
+}
+
+resource "aws_security_group" "gate_sg" {
+    name = "Security group for Gateway ALB"
+    description = "aline-kwi-gateway-sg"
+    vpc_id = aws_vpc.vpc.id
+
+    ingress {
+        from_port = 80
+        to_port = 80
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+        # self = true
+    }
+
+    egress {
+        from_port = 0
+        to_port = 0
+        protocol = "-1"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    tags = {
+        Name = "aline-kwi-gateway-sg"
+    }
+    depends_on = [aws_vpc.vpc]
+}
+
+resource "aws_security_group" "connector_sg" {
+    name = "Security group for connecting the two ALBs"
+    description = "aline-kwi-connect-sg"
+    vpc_id = aws_vpc.vpc.id
+
+    ingress {
+        from_port = 0
+        to_port = 0
+        protocol = "-1"
+        self = true
+    }
+
+    egress {
+        from_port = 0
+        to_port = 0
+        protocol = "-1"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    tags = {
+        Name = "aline-kwi-connect-sg"
     }
     depends_on = [aws_vpc.vpc]
 }
@@ -131,11 +186,32 @@ resource "aws_route_table_association" "private_association" {
     depends_on = [aws_route_table.private_route_table, aws_subnet.private]
 }
 
-resource "aws_lb" "alb" {
-    name = var.alb
+resource "aws_lb" "microservice_alb" {
+    name = var.micro_alb
+    internal = true
+    load_balancer_type = "application"
+    security_groups = [aws_security_group.ms_sg.id, aws_security_group.connector_sg.id]
+    subnets = [for subnet in aws_subnet.private : subnet.id]
+    depends_on = [aws_subnet.private, aws_security_group.ms_sg]
+}
+
+resource "aws_lb" "gateway_alb" {
+    name = var.gate_alb
     internal = false
     load_balancer_type = "application"
-    security_groups = [for security_group in aws_security_group.sg : security_group.id]
+    security_groups = [aws_security_group.gate_sg.id, aws_security_group.connector_sg.id]
     subnets = [for subnet in aws_subnet.public : subnet.id]
-    depends_on = [aws_subnet.public, aws_security_group.sg]
+    depends_on = [aws_subnet.public, aws_security_group.gate_sg]
+}
+
+resource "aws_route53_zone" "r53_zone" {
+  name = var.route53_domain
+}
+
+resource "aws_route53_record" "aline_record" {
+  zone_id = aws_route53_zone.r53_zone.id
+  name = join(".", ["api", var.route53_domain])
+  type = "CNAME"
+  ttl = "20"
+  records = [aws_lb.gateway_alb.dns_name]
 }

@@ -4,8 +4,8 @@ variable "vpc_cidr" {
 }
 
 variable "vpc_sg" {
-  type        = any
-  description = "Security groups used within the VPC."
+  type        = list(number)
+  description = "Security group ports used within the VPC."
 }
 
 variable "public" {
@@ -26,7 +26,17 @@ variable "private" {
   description = "Subnets used for the VPC."
 }
 
-variable "alb" {
+variable "micro_alb" {
   type = string
-  description = "Name for the Application Load Balancer."
+  description = "Name for the Microservice Application Load Balancer."
+}
+
+variable "gate_alb" {
+  type = string
+  description = "Name for the Gateway Application Load Balancer."
+}
+
+variable "route53_domain" {
+  type = string
+  description = "Domain name used by Route53."
 }
