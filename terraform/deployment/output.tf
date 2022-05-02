@@ -26,6 +26,10 @@ output "gateway_security_group" {
     value = module.vpc.gateway_sg
 }
 
+output "kubernetes_security_group" {
+    value = module.vpc.kubernetes_sg
+}
+
 output "app_load_balancer" {
     value = module.vpc.micro_alb
 }

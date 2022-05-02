@@ -1,3 +1,8 @@
+variable "env" {
+  type = string
+  description = "Environment of the project."
+}
+
 variable "vpc_cidr" {
   type        = string
   description = "CIDR block for the VPC."
