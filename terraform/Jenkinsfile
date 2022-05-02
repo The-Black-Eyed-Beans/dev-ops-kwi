@@ -4,8 +4,10 @@ pipeline {
     environment {
         REGION_KWI = credentials("REGION-KWI")
         BUCKET_KWI = credentials("BUCKET-KWI")
-        KEY_NAME = "aline-kwi-infra"
+        KEY_NAME = "aline-kwi-dev-infra"
         DEPLOY_DIR = "terraform/deployment"
+        MODULE_DIR = "terraform/modules"
+        ENVIRONMENT = "dev"
         COMMIT_HASH = "${sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()}"
     }
 
@@ -26,11 +28,16 @@ pipeline {
             }
         }
 
+        stage("TFLint") {
+            echo "Checking for errors via TFLint"
+        }
+
         stage("Plan") {
             steps {
                 echo "Creating Terraform Plan"
                 dir ("${DEPLOY_DIR}") {
-                    sh "terraform plan -var-file=input.tfvars -no-color -out out.tf"
+                    sh "aws s3 --profile keshaun cp s3://${BUCKET_KWI}/inputs/input-${ENVIRONMENT}.tfvars ."
+                    sh "terraform plan -var-file=input-${ENVIRONMENT}.tfvars -no-color -out out.tf"
                 }
             }
         }
@@ -39,8 +46,15 @@ pipeline {
             steps {
                 echo "Applying Terraform Plan"
                 dir ("${DEPLOY_DIR}") {
-                    sh "terraform apply -auto-approve -no-color out.tf > output-${COMMIT_HASH}.txt"
-                    sh "aws s3 --profile keshaun cp output-${COMMIT_HASH}.txt s3://${BUCKET_KWI}/output/"
+                    script {
+                        def plans = sh(script: 'cat out.tf',returnStdout: true)
+                        if (plan.contains("Plan:")) {
+                            sh "terraform apply -auto-approve -no-color out.tf > output-${COMMIT_HASH}.txt"
+                            sh "aws s3 --profile keshaun cp output-${COMMIT_HASH}.txt s3://${BUCKET_KWI}/output/"
+                        } else {
+                            error("No changes to be made to Terraform infrastructure.")
+                        }
+                    }
                 }
             }
         }
