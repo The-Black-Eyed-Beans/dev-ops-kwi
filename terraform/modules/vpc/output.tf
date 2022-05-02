@@ -33,6 +33,11 @@ output "gateway_sg" {
     value = aws_security_group.gate_sg
 }
 
+output "kubernetes_sg" {
+    description = "Security group for Kubernetes."
+    value = aws_security_group.k8s_sg
+}
+
 output "micro_alb" {
     description = "Application Load Balancer for the microservices."
     value = aws_lb.microservice_alb

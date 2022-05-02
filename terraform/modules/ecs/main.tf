@@ -1,10 +1,10 @@
 resource "aws_iam_role" "ecs_execution_role" {
-    name = "aline-kwi-ecs-execution-role"
+    name = join("-", ["aline", "kwi", var.env, "ecs", "execution", "role"])
     assume_role_policy = data.aws_iam_policy_document.execution_policy_document.json
 }
 
 resource "aws_iam_role" "ecs_task_role" {
-    name = "aline-kwi-ecs-task-role"
+    name = join("-", ["aline", "kwi", var.env, "ecs", "task", "role"])
     assume_role_policy = data.aws_iam_policy_document.execution_policy_document.json
 }
 
@@ -29,7 +29,7 @@ resource "aws_iam_role_policy_attachment" "ecs_access_policy" {
 }
 
 resource "aws_ecs_cluster" "ecs" {
-    name = "aline-kwi-ecs"
+    name = join("-", ["aline", "kwi", var.env, "ecs"])
 
     setting {
         name = "containerInsights"
@@ -37,7 +37,7 @@ resource "aws_ecs_cluster" "ecs" {
     }
 
     tags = {
-        Name = "aline-kwi-ecs"
+        Name = join("-", ["aline", "kwi", var.env, "ecs"])
     }
 }
 

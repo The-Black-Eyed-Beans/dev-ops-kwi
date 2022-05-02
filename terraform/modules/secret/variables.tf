@@ -1,3 +1,8 @@
+variable "env" {
+  type = string
+  description = "Environment of the project."
+}
+
 variable "vpc" {
   type        = any
   description = "The VPC for the project."
@@ -21,6 +26,11 @@ variable "app_security_group" {
 variable "gateway_security_group" {
   type        = any
   description = "The security group used for the gateway."
+}
+
+variable "kubernetes_security_group" {
+  type        = any
+  description = "The security group used for Kubernetes."
 }
 
 variable "app_alb" {

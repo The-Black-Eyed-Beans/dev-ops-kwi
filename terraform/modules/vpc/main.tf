@@ -2,7 +2,7 @@ resource "aws_vpc" "vpc" {
     cidr_block = var.vpc_cidr
     
     tags = {
-        Name = "aline-kwi-vpc"
+        Name = join("-", ["aline", "kwi", var.env, "vpc"])
     }
 }
 
@@ -11,13 +11,13 @@ resource "aws_internet_gateway" "gateway" {
     depends_on = [aws_vpc.vpc]
 
     tags = {
-        Name = "aline-kwi-ig"
+        Name = join("-", ["aline", "kwi", var.env, "ig"])
     }
 }
 
 resource "aws_security_group" "ms_sg" {
-    name = "Security group for Microservice ALB"
-    description = "aline-kwi-microservice-sg"
+    name = join("-", ["aline", "kwi", var.env, "microservice", "sg"])
+    description = "Security group for Microservice ALB"
     vpc_id = aws_vpc.vpc.id
 
     dynamic "ingress" {
@@ -40,14 +40,14 @@ resource "aws_security_group" "ms_sg" {
     }
 
     tags = {
-        Name = "aline-kwi-microservice-sg"
+        Name = join("-", ["aline", "kwi", var.env, "microservice", "sg"])
     }
     depends_on = [aws_vpc.vpc]
 }
 
 resource "aws_security_group" "gate_sg" {
-    name = "Security group for Gateway ALB"
-    description = "aline-kwi-gateway-sg"
+    name = join("-", ["aline", "kwi", var.env, "gateway", "sg"]) 
+    description = "Security group for Gateway ALB"
     vpc_id = aws_vpc.vpc.id
 
     ingress {
@@ -66,14 +66,14 @@ resource "aws_security_group" "gate_sg" {
     }
 
     tags = {
-        Name = "aline-kwi-gateway-sg"
+        Name = join("-", ["aline", "kwi", var.env, "gateway", "sg"]) 
     }
     depends_on = [aws_vpc.vpc]
 }
 
 resource "aws_security_group" "connector_sg" {
-    name = "Security group for connecting the two ALBs"
-    description = "aline-kwi-connect-sg"
+    name = join("-", ["aline", "kwi", var.env, "connect", "sg"])
+    description = "Security group for connecting the two ALBs"
     vpc_id = aws_vpc.vpc.id
 
     ingress {
@@ -91,7 +91,33 @@ resource "aws_security_group" "connector_sg" {
     }
 
     tags = {
-        Name = "aline-kwi-connect-sg"
+        Name = join("-", ["aline", "kwi", var.env, "connect", "sg"])
+    }
+    depends_on = [aws_vpc.vpc]
+}
+
+resource "aws_security_group" "k8s_sg" {
+    name = join("-", ["aline", "kwi", var.env, "k8s", "sg"])
+    description = "Security group for EKS Nodegroups"
+    vpc_id = aws_vpc.vpc.id
+
+    ingress {
+        from_port = 30000
+        to_port = 30000
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+        # self = true
+    }
+
+    egress {
+        from_port = 0
+        to_port = 0
+        protocol = "-1"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    tags = {
+        Name = join("-", ["aline", "kwi", var.env, "k8s", "sg"])
     }
     depends_on = [aws_vpc.vpc]
 }
@@ -104,7 +130,7 @@ resource "aws_subnet" "public" {
     availability_zone = each.value["az"]
 
     tags = {
-        Name = each.value["tag_name"] == "" ? "aline-kwi-subnet" : each.value["tag_name"]
+        Name = each.value["tag_name"] == "" ? join("-", ["aline", "kwi", var.env, "subnet"]) : join("-", ["aline", "kwi", var.env, each.value["tag_name"]]) 
         Tier = "Public"
     }
 
@@ -119,7 +145,7 @@ resource "aws_subnet" "private" {
     availability_zone = each.value["az"]
 
     tags = {
-        Name = each.value["tag_name"] == "" ? "aline-kwi-subnet" : each.value["tag_name"]
+        Name = each.value["tag_name"] == "" ? join("-", ["aline", "kwi", var.env, "subnet"]) : join("-", ["aline", "kwi", var.env, each.value["tag_name"]]) 
         Tier = "Private"
     }
 
@@ -128,6 +154,10 @@ resource "aws_subnet" "private" {
 
 resource "aws_eip" "eip" {
     vpc = true
+
+    tags = {
+        Name = join("-", ["aline", "kwi", var.env, "eip"])
+    }
 }
 
 resource "aws_nat_gateway" "nat_gateway" {
@@ -135,7 +165,7 @@ resource "aws_nat_gateway" "nat_gateway" {
     subnet_id = aws_subnet.public[element(keys(aws_subnet.public), 0)]["id"]
 
     tags = {
-        Name = "aline-kwi-nat-gateway"
+        Name = join("-", ["aline", "kwi", var.env, "nat", "gateway"])
     }
 
     depends_on = [aws_eip.eip, aws_subnet.public]
@@ -151,7 +181,7 @@ resource "aws_route_table" "public_route_table" {
     }
 
     tags = {
-        Name = "aline-kwi-public-RT"
+        Name = join("-", ["aline", "kwi", var.env, "public", "RT"])
     }
 
     depends_on = [aws_vpc.vpc, aws_internet_gateway.gateway]
@@ -166,7 +196,7 @@ resource "aws_route_table" "private_route_table" {
     }
 
     tags = {
-        Name = "aline-kwi-private-RT"
+        Name = join("-", ["aline", "kwi", var.env, "private", "RT"])
     }
 
     depends_on = [aws_vpc.vpc, aws_nat_gateway.nat_gateway]
@@ -187,7 +217,7 @@ resource "aws_route_table_association" "private_association" {
 }
 
 resource "aws_lb" "microservice_alb" {
-    name = var.micro_alb
+    name = join("-", ["aline", "kwi", var.env, "service", "lb"])
     internal = true
     load_balancer_type = "application"
     security_groups = [aws_security_group.ms_sg.id, aws_security_group.connector_sg.id]
@@ -196,7 +226,7 @@ resource "aws_lb" "microservice_alb" {
 }
 
 resource "aws_lb" "gateway_alb" {
-    name = var.gate_alb
+    name = join("-", ["aline", "kwi", var.env, "gateway", "lb"])
     internal = false
     load_balancer_type = "application"
     security_groups = [aws_security_group.gate_sg.id, aws_security_group.connector_sg.id]
@@ -204,14 +234,15 @@ resource "aws_lb" "gateway_alb" {
     depends_on = [aws_subnet.public, aws_security_group.gate_sg]
 }
 
-resource "aws_route53_zone" "r53_zone" {
-  name = var.route53_domain
+data "aws_route53_zone" "r53_zone" {
+    name = var.route53_domain
+    private_zone = false
 }
 
-resource "aws_route53_record" "aline_record" {
-  zone_id = aws_route53_zone.r53_zone.id
-  name = join(".", ["api", var.route53_domain])
+resource "aws_route53_record" "api_record" {
+  zone_id = data.aws_route53_zone.r53_zone.id
+  name = join(".", ["api", var.env, "keshaun", var.route53_domain])
   type = "CNAME"
-  ttl = "20"
+  ttl = "7200"
   records = [aws_lb.gateway_alb.dns_name]
 }

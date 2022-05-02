@@ -1,5 +1,6 @@
 resource "aws_secretsmanager_secret" "resources" {
-    name = "aline-kwi/dev/secrets/resources"
+    name = join("/", ["aline-kwi", var.env, "secrets", "resources"])
+    recovery_window_in_days = 0
 }
 
 resource "aws_secretsmanager_secret_version" "version" {
@@ -19,6 +20,7 @@ resource "aws_secretsmanager_secret_version" "version" {
         %{endfor ~}
         "AppSecurityGroup": "${var.app_security_group.id}",
         "GatewaySecurityGroup": "${var.gateway_security_group.id}",
+        "KubernetesSecurityGroup": "${var.kubernetes_security_group.id}",
         "EcsCluster": "${var.ecs.id}",
         "EksCluster": "${var.eks.arn}",
         "TaskExecutionRole": "${var.ecs_role.arn}",
