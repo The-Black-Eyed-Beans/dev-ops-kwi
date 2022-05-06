@@ -9,7 +9,6 @@ pipeline {
     environment {
         REGION_KWI = credentials("REGION-KWI")
         BUCKET_KWI = credentials("BUCKET-KWI")
-        KEY_NAME = "aline-kwi-dev-infra"
         DEPLOY_DIR = "terraform/deployment"
         MODULE_DIR = "terraform/modules"
         TEST_DIR= "terraform/test"
@@ -22,13 +21,11 @@ pipeline {
             steps {
                 echo "Initializing Terraform..."
                 dir ("${DEPLOY_DIR}") {
+                    sh "aws s3 --profile keshaun cp s3://${BUCKET_KWI}/inputs/backend-${ENVIRONMENT}.hcl ."
                     sh """
                     terraform init \
                         -no-color \
-                        -backend-config="bucket=${BUCKET_KWI}" \
-                        -backend-config="key=${KEY_NAME}.t2state" \
-                        -backend-config="region=${REGION_KWI}" \
-                        -backend-config="profile=keshaun"
+                        -backend-config=backend-${ENVIRONMENT}.hcl
                     """
                 }
             }
@@ -111,6 +108,7 @@ pipeline {
         always {
             sh "rm ${TEST_DIR}/go.mod"
             sh "rm ${TEST_DIR}/go.sum"
+            sh "rm ${DEPLOY_DIR}/backend-${ENVIRONMENT}.hcl"
             sh "rm ${DEPLOY_DIR}/out.tf"
             sh "rm ${DEPLOY_DIR}/out.txt"
             sh "rm ${DEPLOY_DIR}/output-${COMMIT_HASH}.txt"
