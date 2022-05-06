@@ -1,0 +1,73 @@
+- name: Create Bastion
+  hosts: localhost
+  connection: local
+
+  vars:
+    keypair: ${KeyPair}
+    instance_type: t2.micro
+    image: ${Image}
+    subnet: ${Subnet}
+    region: ${Region}
+    pem: ./${KeyPair}.pem
+
+  tasks:
+    - name: Create Bastion Security Group
+      amazon.aws.ec2_group:
+        name: aline-kwi-bastion-sg
+        description: "Security group for Bastion Host"
+        vpc_id: vpc-016639ba0b8b7cacd
+        region: us-east-1
+        rules:
+          - proto: tcp
+            ports:
+              - 22
+            cidr_ip: 0.0.0.0/0
+            rule_desc: Allow access to SSH.
+
+    - name: Create Bastion host
+      amazon.aws.ec2_instance:
+        key_name: "{{ keypair }}"
+        instance_type: t2.micro
+        image_id: "{{ image }}"
+        vpc_subnet_id: "{{ subnet }}"
+        region: "{{ region }}"
+        security_group: aline-kwi-bastion-sg
+        user_data: "#!/bin/bash \nsudo yum install mysql python3 git -y \ngit clone https://github.com/sshuttle/sshuttle.git \ncd sshuttle \nsudo python3 ./setup.py install"
+        tags:
+          Name: aline-kwi-bastion
+      register: bastion
+
+    - name: Debug for bastion
+      debug: msg="{{ item.instance_id }}"
+      loop: "{{ bastion.instances }}"
+
+    - name: Add new instance to to registered hosts
+      add_host:
+        hostname: "{{ item.public_ip_address }}"
+        groupname: bastion_group
+      loop: "{{ bastion.instances }}"
+
+    - name: Make Route53 record for bastion
+      community.aws.route53:
+        state: present
+        zone: theblackeyedbeans.net
+        record: kwi-bastion.theblackeyedbeans.net
+        type: A
+        ttl: 7200
+        value: "{{ item.public_ip_address }}"
+      loop: "{{ bastion.instances }}"
+
+    - name: Wait for SSH to come up
+      delegate_to: "{{ item.public_ip_address }}"
+      wait_for_connection:
+        delay: 60
+        timeout: 300
+      loop: "{{ bastion.instances }}"
+
+- name: Configure Bastion
+  hosts: bastion_group
+  user: ec2-user
+  become: yes
+  
+  vars:
+    ansible_ssh_private_key_file: {{ pem }}

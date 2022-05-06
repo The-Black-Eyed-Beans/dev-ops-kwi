@@ -1,0 +1,145 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Root CloudFormation template for the infrastructure of the project.",
+    "Parameters": {
+        "S3BucketName": {
+            "AllowedPattern": "^[0-9a-zA-Z]+([0-9a-zA-Z-.]*[0-9a-zA-Z])*$",
+            "ConstraintDescription": "Bucket name can include numbers, lowercase letters, uppercase letters, periods (.), and hyphens (-). It cannot start or end with a hyphen (-).",
+            "Description": "S3 bucket name for the Nested Stacks. S3 bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
+            "Type": "String",
+            "Default": "kwi-cft"
+        },
+
+        "EnvironmentType": {
+            "Description": "The Environment type of the stack.",
+            "Type": "String",
+            "Default": "dev",
+            "AllowedValues": ["dev", "test", "prod"],
+            "ConstraintDescription": "Specify either dev, test, or prod."
+        },
+
+        "VPCCidr": {
+            "Type": "String",
+            "Description": "CIDR block for the VPC.",
+            "Default": "12.22.0.0/16",
+            "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$",
+            "ConstraintDescription": "CIDR block parameter must be in the form x.x.x.x/16-28"
+        },
+        "Public1Cidr": {
+            "Type": "String",
+            "Description": "CIDR block for the first public subnets",
+            "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$",
+            "ConstraintDescription": "CIDR block parameter must be in the form x.x.x.x/16-28",
+            "Default": "12.22.1.0/24"
+        },
+        "Public2Cidr": {
+            "Type": "String",
+            "Description": "CIDR block for the second public subnets",
+            "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$",
+            "ConstraintDescription": "CIDR block parameter must be in the form x.x.x.x/16-28",
+            "Default": "12.22.2.0/24"
+        },
+        "Private1Cidr": {
+            "Type": "String",
+            "Description": "CIDR block for the first private subnet.",
+            "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$",
+            "ConstraintDescription": "CIDR block parameter must be in the form x.x.x.x/16-28",
+            "Default": "12.22.3.0/24"
+        },
+        "Private2Cidr": {
+            "Type": "String",
+            "Description": "CIDR block for the second private subnet.",
+            "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$",
+            "ConstraintDescription": "CIDR block parameter must be in the form x.x.x.x/16-28",
+            "Default": "12.22.4.0/24"
+        },
+        "AvailabilityZone1": {
+            "Type": "String",
+            "Description": "Availability zones for the subnets.",
+            "Default": "eu-central-1a"
+        },
+        "AvailabilityZone2": {
+            "Type": "String",
+            "Description": "Availability zones for the subnets.",
+            "Default": "eu-central-1b"
+        },
+        "Route53Domain": {
+            "Type": "String",
+            "Description": "Domain name used by Route53.",
+            "Default": "theblackeyedbeans.net"
+        }
+    },
+
+    "Resources": {
+        "VpcStack": {
+            "Type": "AWS::CloudFormation::Stack",
+            "Properties": {
+                "TemplateURL": { "Fn::Sub": "https://${S3BucketName}.s3.amazonaws.com/vpc.json" },
+                "TimeoutInMinutes": 20,
+                "Parameters": {
+                    "EnvironmentType": { "Ref": "EnvironmentType" },
+                    "VPCCidr": { "Ref": "VPCCidr" },
+                    "Public1Cidr": { "Ref": "Public1Cidr" },
+                    "Public2Cidr": { "Ref": "Public2Cidr" },
+                    "Private1Cidr": { "Ref": "Private1Cidr" },
+                    "Private2Cidr": { "Ref": "Private2Cidr" },
+                    "AvailabilityZone1": { "Ref": "AvailabilityZone1" },
+                    "AvailabilityZone2": { "Ref": "AvailabilityZone2" },
+                    "Route53Domain": { "Ref": "Route53Domain" }
+                }
+            }
+        },
+
+        "EcsStack": {
+            "Type": "AWS::CloudFormation::Stack",
+            "Properties": {
+                "TemplateURL": { "Fn::Sub": "https://${S3BucketName}.s3.amazonaws.com/ecs.json" },
+                "TimeoutInMinutes": 10,
+                "Parameters": {
+                    "EnvironmentType": { "Ref": "EnvironmentType" }
+                }
+            }
+        },
+
+        "EksStack": {
+            "Type": "AWS::CloudFormation::Stack",
+            "Properties": {
+                "TemplateURL": { "Fn::Sub": "https://${S3BucketName}.s3.amazonaws.com/eks.json" },
+                "TimeoutInMinutes": 20,
+                "Parameters": {
+                    "EnvironmentType": { "Ref": "EnvironmentType" },
+                    "PrivateSubnet1Id": { "Fn::GetAtt": ["VpcStack", "Outputs.PrivateSubnet1"] },
+                    "PrivateSubnet2Id": { "Fn::GetAtt": ["VpcStack", "Outputs.PrivateSubnet2"] }
+                }
+            }
+        },
+
+        "SecretsStack": {
+            "Type": "AWS::CloudFormation::Stack",
+            "Properties": {
+                "TemplateURL": { "Fn::Sub": "https://${S3BucketName}.s3.amazonaws.com/secrets.json" },
+                "TimeoutInMinutes": 20,
+                "Parameters": {
+                    "EnvironmentType": { "Ref": "EnvironmentType" },
+                    "VpcId": { "Fn::GetAtt": ["VpcStack", "Outputs.VPC"] },
+                    "AppLBArn": { "Fn::GetAtt": ["VpcStack", "Outputs.AppLoadBalancerArn"] },
+                    "AppLBDns": { "Fn::GetAtt": ["VpcStack", "Outputs.AppLoadBalancerDns"] },
+                    "GateLBArn": { "Fn::GetAtt": ["VpcStack", "Outputs.GatewayLoadBalancerArn"] },
+                    "GateLBDns": { "Fn::GetAtt": ["VpcStack", "Outputs.GatewayLoadBalancerDns"] },
+                    "PublicSubnet1Id": { "Fn::GetAtt": ["VpcStack", "Outputs.PublicSubnet1"] },
+                    "PublicSubnet2Id": { "Fn::GetAtt": ["VpcStack", "Outputs.PublicSubnet2"] },
+                    "PrivateSubnet1Id": { "Fn::GetAtt": ["VpcStack", "Outputs.PrivateSubnet1"] },
+                    "PrivateSubnet2Id": { "Fn::GetAtt": ["VpcStack", "Outputs.PrivateSubnet2"] },
+                    "AppSecGroup": { "Fn::GetAtt": ["VpcStack", "Outputs.AppSecurityGroup"] },
+                    "GateSecGroup": { "Fn::GetAtt": ["VpcStack", "Outputs.GatewaySecurityGroup"] },
+                    "K8sSecGroup": { "Fn::GetAtt": ["VpcStack", "Outputs.KubernetesSecurityGroup"] },
+                    "EcsCluster": { "Fn::GetAtt": ["EcsStack", "Outputs.EcsCluster"] },
+                    "EksCluster": { "Fn::GetAtt": ["EksStack", "Outputs.EksCluster"] },
+                    "TaskExecutionRole": { "Fn::GetAtt": ["EcsStack", "Outputs.ExecutionRole"] },
+                    "TaskRole": { "Fn::GetAtt": ["EcsStack", "Outputs.TaskRole"] },
+                    "ClusterRole": { "Fn::GetAtt": ["EksStack", "Outputs.ClusterRole"] }
+                }
+            }
+        }
+    }
+}

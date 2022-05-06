@@ -1,0 +1,107 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Deploying necessary infrastructure for ECS deployment.",
+    "Parameters": {
+        "EnvironmentType": {
+            "Description": "The Environment type of the stack.",
+            "Type": "String",
+            "Default": "dev",
+            "AllowedValues": ["dev", "test", "prod"],
+            "ConstraintDescription": "Specify either dev, test, or prod."
+        }
+    },
+    
+    "Resources": {
+        "ExecutionRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "RoleName": { "Fn::Sub": "aline-kwi-${EnvironmentType}-ecs-execution-role" },
+                "ManagedPolicyArns": [
+                    "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy",
+                    "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly",
+                    "arn:aws:iam::086620157175:policy/CreateLogGroupPolicy"
+                ],
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Action": [ "sts:AssumeRole" ],
+                            "Principal": {
+                                "Service": [ "ecs-tasks.amazonaws.com" ]
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+
+        "TaskRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "RoleName": { "Fn::Sub": "aline-kwi-${EnvironmentType}-task-role" },
+                "ManagedPolicyArns": [
+                    "arn:aws:iam::aws:policy/AmazonECS_FullAccess"
+                ],
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Action": [ "sts:AssumeRole" ],
+                            "Principal": {
+                                "Service": [ "ecs-tasks.amazonaws.com" ]
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+
+        "Cluster": {
+            "Type" : "AWS::ECS::Cluster",
+            "Properties": {
+                "ClusterName": { "Fn::Sub": "aline-kwi-${EnvironmentType}-ecs" },
+                "ClusterSettings": [
+                    {
+                        "Name": "containerInsights",
+                        "Value": "enabled"
+                    }
+                ],
+
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": { "Fn::Sub": "aline-kwi-${EnvironmentType}-ecs" }
+                    }
+                ]
+            }
+        }
+    },
+
+    "Outputs": {
+        "EcsCluster": {
+            "Description": "ECS Cluster for the project.",
+            "Value": { "Fn::GetAtt": ["Cluster", "Arn"] },
+            "Export": {
+                "Name": { "Fn::Sub": "${AWS::StackName}-EcsCluster"}
+            }
+        },
+
+        "ExecutionRole": {
+            "Description": "The Task Execution role for the ECS cluster.",
+            "Value": { "Fn::GetAtt": ["ExecutionRole", "Arn"] },
+            "Export": {
+                "Name": { "Fn::Sub": "${AWS::StackName}-ExecutionRole"}
+            }
+        },
+
+        "TaskRole": {
+            "Description": "The Task role for the ECS cluster.",
+            "Value": { "Fn::GetAtt": ["TaskRole", "Arn"] },
+            "Export": {
+                "Name": { "Fn::Sub": "${AWS::StackName}-TaskRole"}
+            }
+        }
+    }
+}
