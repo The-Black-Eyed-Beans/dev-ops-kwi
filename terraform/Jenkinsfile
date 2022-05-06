@@ -7,6 +7,7 @@ pipeline {
         KEY_NAME = "aline-kwi-dev-infra"
         DEPLOY_DIR = "terraform/deployment"
         MODULE_DIR = "terraform/modules"
+        TEST_DIR= "terraform/test"
         ENVIRONMENT = "dev"
         COMMIT_HASH = "${sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()}"
     }
@@ -14,7 +15,7 @@ pipeline {
     stages {
         stage("Init") {
             steps {
-                echo "Initializing Terraform.."
+                echo "Initializing Terraform..."
                 dir ("${DEPLOY_DIR}") {
                     sh """
                     terraform init \
@@ -29,12 +30,32 @@ pipeline {
         }
 
         stage("TFLint") {
-            echo "Checking for errors via TFLint"
+            echo "Checking for errors via TFLint..."
+            dir ("${MODULE_DIR}/vpc") {
+                echo "Checking VPC module..."
+                sh "tflint --init"
+                sh "tflint"
+            }
+            dir ("${MODULE_DIR}/ecs") {
+                echo "Checking ECS module..."
+                sh "tflint --init"
+                sh "tflint"
+            }
+            dir ("${MODULE_DIR}/eks") {
+                echo "Checking EKS module..."
+                sh "tflint --init"
+                sh "tflint"
+            }
+            dir ("${MODULE_DIR}/secret") {
+                echo "Checking Secrets module..."
+                sh "tflint --init"
+                sh "tflint"
+            }
         }
 
         stage("Plan") {
             steps {
-                echo "Creating Terraform Plan"
+                echo "Creating Terraform Plan..."
                 dir ("${DEPLOY_DIR}") {
                     sh "aws s3 --profile keshaun cp s3://${BUCKET_KWI}/inputs/input-${ENVIRONMENT}.tfvars ."
                     sh "terraform plan -var-file=input-${ENVIRONMENT}.tfvars -no-color -out out.tf"
@@ -42,9 +63,26 @@ pipeline {
             }
         }
 
+        stage("Test") {
+            echo "Testing Terraform Deployment"
+            dir ("${TEST_DIR}") {
+                script {
+                    def plans = sh(script: 'cat ../deployment/out.tf',returnStdout: true)
+                    if (plan.contains("Plan:")) {
+                        sh "aws s3 --profile keshaun cp s3://${BUCKET_KWI}/inputs/aws_infrastructure_testdata.json ."
+                        sh "go mod init aws_infrastructure"
+                        sh "go mod tidy"
+                        sh "go test ./aws_infrastructure_test.go -v -timeout 30m"
+                    } else {
+                        error("No changes to be made to Terraform infrastructure.")
+                    }
+                }
+            }
+        }
+
         stage("Apply") {
             steps {
-                echo "Applying Terraform Plan"
+                echo "Applying Terraform Plan..."
                 dir ("${DEPLOY_DIR}") {
                     script {
                         def plans = sh(script: 'cat out.tf',returnStdout: true)

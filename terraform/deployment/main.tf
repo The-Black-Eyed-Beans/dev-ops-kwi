@@ -5,8 +5,6 @@ module "vpc" {
     vpc_sg = var.vpc_sg
     public = var.public
     private = var.private
-    micro_alb = var.micro_alb
-    gate_alb = var.gate_alb
     route53_domain = var.route53_domain
 }
 
@@ -18,7 +16,9 @@ module "ecs" {
 module "eks" {
     source = "../modules/eks"
     env = var.env
+    public = module.vpc.public
     private = module.vpc.private
+    kubernetes_sg = module.vpc.kubernetes_sg
 }
 
 module "secret" {

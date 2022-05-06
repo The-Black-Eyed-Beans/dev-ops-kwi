@@ -1,5 +1,9 @@
 output "vpc" {
-    value = module.vpc.vpc
+    value = module.vpc.vpc.tags.Name
+}
+
+output "vpc_cidr" {
+    value = module.vpc.vpc.cidr_block
 }
 
 output "public" {
@@ -8,14 +12,6 @@ output "public" {
 
 output "private" {
     value = module.vpc.private
-}
-
-output "gateway" {
-    value = module.vpc.gateway
-}
-
-output "nat" {
-    value = module.vpc.nat
 }
 
 output "app_security_group" {
@@ -31,11 +27,11 @@ output "kubernetes_security_group" {
 }
 
 output "app_load_balancer" {
-    value = module.vpc.micro_alb
+    value = module.vpc.micro_alb.name
 }
 
 output "gateway_load_balancer" {
-    value = module.vpc.gate_alb
+    value = module.vpc.gate_alb.name
 }
 
 output "ecs" {
