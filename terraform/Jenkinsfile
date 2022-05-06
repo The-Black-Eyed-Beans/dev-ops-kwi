@@ -109,6 +109,8 @@ pipeline {
 
     post {
         always {
+            sh "rm ${TEST_DIR}/go.mod"
+            sh "rm ${TEST_DIR}/go.sum"
             sh "rm ${DEPLOY_DIR}/out.tf"
             sh "rm ${DEPLOY_DIR}/out.txt"
             sh "rm ${DEPLOY_DIR}/output-${COMMIT_HASH}.txt"
