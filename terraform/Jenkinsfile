@@ -3,6 +3,7 @@ pipeline {
 
     tools {
         terraform "Terraform"
+        go "Golang"
     }
 
     environment {
