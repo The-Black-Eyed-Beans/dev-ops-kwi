@@ -62,7 +62,7 @@ pipeline {
                 echo "Creating Terraform Plan..."
                 dir ("${DEPLOY_DIR}") {
                     sh "aws s3 --profile keshaun cp s3://${BUCKET_KWI}/inputs/input-${ENVIRONMENT}.tfvars ."
-                    sh "terraform plan -var-file=input-${ENVIRONMENT}.tfvars -no-color -out out.tf > out.txt"
+                    sh "terraform plan -var-file=input-${ENVIRONMENT}.tfvars -no-color > out.txt"
                 }
             }
         }
@@ -93,7 +93,7 @@ pipeline {
                     script {
                         def plans = sh(script: 'cat out.txt',returnStdout: true)
                         if (plans.contains("Plan:")) {
-                            sh "terraform apply -auto-approve -no-color out.tf > output-${COMMIT_HASH}.txt"
+                            sh "terraform apply -auto-approve -no-color -var-file=input-${ENVIRONMENT}.tfvars > output-${COMMIT_HASH}.txt"
                             sh "aws s3 --profile keshaun cp output-${COMMIT_HASH}.txt s3://${BUCKET_KWI}/output/"
                         } else {
                             error("No changes to be made to Terraform infrastructure.")
