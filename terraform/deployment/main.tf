@@ -16,9 +16,7 @@ module "ecs" {
 module "eks" {
     source = "../modules/eks"
     env = var.env
-    public = module.vpc.public
     private = module.vpc.private
-    kubernetes_sg = module.vpc.kubernetes_sg
 }
 
 module "secret" {
