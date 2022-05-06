@@ -66,17 +66,19 @@ pipeline {
         }
 
         stage("Test") {
-            echo "Testing Terraform Deployment"
-            dir ("${TEST_DIR}") {
-                script {
-                    def plans = sh(script: 'cat ../deployment/out.tf',returnStdout: true)
-                    if (plan.contains("Plan:")) {
-                        sh "aws s3 --profile keshaun cp s3://${BUCKET_KWI}/inputs/aws_infrastructure_testdata.json ."
-                        sh "go mod init aws_infrastructure"
-                        sh "go mod tidy"
-                        sh "go test ./aws_infrastructure_test.go -v -timeout 30m"
-                    } else {
-                        error("No changes to be made to Terraform infrastructure.")
+            steps {
+                echo "Testing Terraform Deployment"
+                dir ("${TEST_DIR}") {
+                    script {
+                        def plans = sh(script: 'cat ../deployment/out.tf',returnStdout: true)
+                        if (plan.contains("Plan:")) {
+                            sh "aws s3 --profile keshaun cp s3://${BUCKET_KWI}/inputs/aws_infrastructure_testdata.json ."
+                            sh "go mod init aws_infrastructure"
+                            sh "go mod tidy"
+                            sh "go test ./aws_infrastructure_test.go -v -timeout 30m"
+                        } else {
+                            error("No changes to be made to Terraform infrastructure.")
+                        }
                     }
                 }
             }
