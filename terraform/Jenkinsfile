@@ -65,7 +65,7 @@ pipeline {
                 echo "Creating Terraform Plan..."
                 dir ("${DEPLOY_DIR}") {
                     sh "aws s3 --profile keshaun cp s3://${BUCKET_KWI}/inputs/input-${ENVIRONMENT}.tfvars ."
-                    sh "terraform plan -var-file=input-${ENVIRONMENT}.tfvars -no-color -out out.tf"
+                    sh "terraform plan -var-file=input-${ENVIRONMENT}.tfvars -no-color -out out.tf > out.txt"
                 }
             }
         }
@@ -75,7 +75,7 @@ pipeline {
                 echo "Testing Terraform Deployment"
                 dir ("${TEST_DIR}") {
                     script {
-                        def plans = sh(script: 'cat ../deployment/out.tf',returnStdout: true)
+                        def plans = sh(script: 'cat ../deployment/out.txt',returnStdout: true)
                         if (plans.contains("Plan:")) {
                             sh "aws s3 --profile keshaun cp s3://${BUCKET_KWI}/inputs/aws_infrastructure_testdata.json ."
                             sh "go mod init aws_infrastructure"
@@ -94,7 +94,7 @@ pipeline {
                 echo "Applying Terraform Plan..."
                 dir ("${DEPLOY_DIR}") {
                     script {
-                        def plans = sh(script: 'cat out.tf',returnStdout: true)
+                        def plans = sh(script: 'cat out.txt',returnStdout: true)
                         if (plans.contains("Plan:")) {
                             sh "terraform apply -auto-approve -no-color out.tf > output-${COMMIT_HASH}.txt"
                             sh "aws s3 --profile keshaun cp output-${COMMIT_HASH}.txt s3://${BUCKET_KWI}/output/"
@@ -110,6 +110,7 @@ pipeline {
     post {
         always {
             sh "rm ${DEPLOY_DIR}/out.tf"
+            sh "rm ${DEPLOY_DIR}/out.txt"
             sh "rm ${DEPLOY_DIR}/output-${COMMIT_HASH}.txt"
         }
     }
