@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+        terraform "Terraform"
+    }
+
     environment {
         REGION_KWI = credentials("REGION-KWI")
         BUCKET_KWI = credentials("BUCKET-KWI")
