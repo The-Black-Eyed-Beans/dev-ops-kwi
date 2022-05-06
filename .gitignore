@@ -4,3 +4,5 @@ terraform/deployment/.terraform
 terraform/deployment/.terraform.lock.hcl
 terraform/deployment/backend.hcl
 terraform/deployment/input.tfvars
+terraform/test/*.json
+terraform/test/go.*
