@@ -76,7 +76,7 @@ pipeline {
                 dir ("${TEST_DIR}") {
                     script {
                         def plans = sh(script: 'cat ../deployment/out.tf',returnStdout: true)
-                        if (plan.contains("Plan:")) {
+                        if (plans.contains("Plan:")) {
                             sh "aws s3 --profile keshaun cp s3://${BUCKET_KWI}/inputs/aws_infrastructure_testdata.json ."
                             sh "go mod init aws_infrastructure"
                             sh "go mod tidy"
@@ -95,7 +95,7 @@ pipeline {
                 dir ("${DEPLOY_DIR}") {
                     script {
                         def plans = sh(script: 'cat out.tf',returnStdout: true)
-                        if (plan.contains("Plan:")) {
+                        if (plans.contains("Plan:")) {
                             sh "terraform apply -auto-approve -no-color out.tf > output-${COMMIT_HASH}.txt"
                             sh "aws s3 --profile keshaun cp output-${COMMIT_HASH}.txt s3://${BUCKET_KWI}/output/"
                         } else {
