@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    options { 
+        buildDiscarder(logRotator(daysToKeepStr: '7', numToKeepStr: '3')) 
+    }
+
     tools {
         terraform "Terraform"
         go "Golang"
