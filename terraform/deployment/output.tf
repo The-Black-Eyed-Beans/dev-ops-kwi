@@ -1,4 +1,8 @@
 output "vpc" {
+    value = module.vpc.vpc
+}
+
+output "vpc_name" {
     value = module.vpc.vpc.tags.Name
 }
 
@@ -10,8 +14,24 @@ output "public" {
     value = module.vpc.public
 }
 
+output "public_one_name" {
+    value = module.vpc.public["PublicSubnet1"].tags.Name
+}
+
+output "public_one_cidr" {
+    value = module.vpc.public["PublicSubnet1"].cidr_block
+}
+
 output "private" {
     value = module.vpc.private
+}
+
+output "private_two_name" {
+    value = module.vpc.private["PrivateSubnet2"].tags.Name
+}
+
+output "private_two_cidr" {
+    value = module.vpc.private["PrivateSubnet2"].cidr_block
 }
 
 output "app_security_group" {
@@ -27,10 +47,18 @@ output "kubernetes_security_group" {
 }
 
 output "app_load_balancer" {
+    value = module.vpc.micro_alb
+}
+
+output "app_load_balancer_name" {
     value = module.vpc.micro_alb.name
 }
 
 output "gateway_load_balancer" {
+    value = module.vpc.gate_alb
+}
+
+output "gateway_load_balancer_name" {
     value = module.vpc.gate_alb.name
 }
 
@@ -38,8 +66,16 @@ output "ecs" {
     value = module.ecs.ecs
 }
 
+output "ecs_name" {
+    value = module.ecs.ecs.name
+}
+
 output "eks" {
     value = module.eks.eks
+}
+
+output "eks_name" {
+    value = module.eks.eks.id
 }
 
 output "resources_secrets" {

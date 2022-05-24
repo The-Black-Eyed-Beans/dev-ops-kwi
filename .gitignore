@@ -6,3 +6,8 @@ terraform/deployment/backend.hcl
 terraform/deployment/input*.tfvars
 terraform/test/*.json
 terraform/test/go.*
+rds/terraform/.terraform
+rds/terraform/.terraform.lock.hcl
+rds/terraform/terraform.tfvars
+rds/terraform/backend.hcl
+rds/ansible/inventory
